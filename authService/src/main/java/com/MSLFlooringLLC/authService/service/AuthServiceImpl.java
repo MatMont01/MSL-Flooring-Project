@@ -86,4 +86,12 @@ public class AuthServiceImpl implements AuthService {
         }
         return jwtUtils.validateToken(token);
     }
+
+    @Override
+    public User getUserFromToken(String token) {
+        String username = jwtUtils.getUsernameFromToken(token);
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new AuthException("Usuario no encontrado"));
+    }
+
 }

@@ -14,4 +14,7 @@ public interface AuthService {
     void logout(String token);
 
     boolean validateToken(String token);
+
+    User getUserFromToken(String token);
+
 }

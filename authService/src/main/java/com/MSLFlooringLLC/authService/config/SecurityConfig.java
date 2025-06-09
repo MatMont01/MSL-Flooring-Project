@@ -40,7 +40,7 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                        .requestMatchers("/api/auth/**", "/auth/password/**").permitAll()
                         .anyRequest().authenticated()
                 )
                 .authenticationProvider(authenticationProvider())
@@ -75,6 +75,15 @@ public class SecurityConfig {
                                             HttpServletResponse response,
                                             FilterChain filterChain)
                     throws ServletException, IOException {
+
+                String path = request.getRequestURI();
+
+                // ❗ Ignorar rutas públicas
+                if (path.startsWith("/api/auth") || path.startsWith("/auth/password")) {
+                    filterChain.doFilter(request, response);
+                    return;
+                }
+
                 String authHeader = request.getHeader("Authorization");
                 String token = null;
                 String username = null;

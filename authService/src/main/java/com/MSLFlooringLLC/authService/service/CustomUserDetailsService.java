@@ -28,11 +28,16 @@ public class CustomUserDetailsService implements UserDetailsService {
         return org.springframework.security.core.userdetails.User.builder()
                 .username(user.getUsername())
                 .password(user.getPasswordHash())
-                .authorities(authorities)
+                .authorities(
+                        user.getRoles().stream()
+                                .map(role -> new SimpleGrantedAuthority(role.getName()))  // 👈 esto está correcto
+                                .collect(Collectors.toList())
+                )
                 .accountExpired(false)
                 .accountLocked(false)
                 .credentialsExpired(false)
                 .disabled(!user.getEnabled())
                 .build();
+
     }
 }
