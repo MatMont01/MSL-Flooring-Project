@@ -2,16 +2,17 @@
 
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:msl_flooring_app/core/common_widgets/home_shell.dart';
+
+// Importamos nuestro nuevo widget
+import 'package:msl_flooring_app/core/common_widgets/session_handler.dart';
 
 import '../../features/analytics/presentation/screens/analytics_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/inventory/presentation/screens/create_material_screen.dart';
 import '../../features/inventory/presentation/screens/inventory_screen.dart';
 
 import '../../features/notifications/presentation/screens/notification_screen.dart';
 import '../../features/projects/presentation/screens/create_project_screen.dart';
-// Importaremos la pantalla de detalles que crearemos después
-
 import '../../features/projects/presentation/screens/project_details_screen.dart';
 import '../../features/projects/presentation/screens/project_list_screen.dart';
 import '../../features/worker/presentation/screens/worker_list_screen.dart';
@@ -30,32 +31,28 @@ class AppRouter {
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
       ),
-      // --- Ruta Contenedora Principal (Shell Route) ---
+      // --- Ruta Contenedora Principal (Shell Route) CORREGIDA ---
       StatefulShellRoute.indexedStack(
+        // En lugar de devolver HomeShell directamente, usamos nuestro SessionHandler.
         builder: (context, state, navigationShell) {
-          return HomeShell(navigationShell: navigationShell);
+          return SessionHandler(navigationShell: navigationShell);
         },
         branches: [
-          // --- Pestaña 0: Proyectos (MODIFICADA) ---
+          // Pestaña 0: Proyectos
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: AppRoutes.home, // Ruta base: /projects
+                path: AppRoutes.home,
                 builder: (context, state) => const ProjectListScreen(),
                 routes: [
                   GoRoute(
-                    path: 'create', // Ruta anidada: /projects/create
+                    path: 'create',
                     builder: (context, state) => const CreateProjectScreen(),
                   ),
-                  // --- AÑADE ESTA NUEVA RUTA ANIDADA ---
                   GoRoute(
-                    // La ruta es ':id', que GoRouter entiende como un parámetro.
-                    // Usamos la constante que definiste para la ruta.
                     path: ':id',
                     builder: (context, state) {
-                      // Extraemos el 'id' de los parámetros de la ruta.
                       final projectId = state.pathParameters['id']!;
-                      // Pasamos el ID a la pantalla de detalles.
                       return ProjectDetailsScreen(projectId: projectId);
                     },
                   ),
@@ -63,15 +60,22 @@ class AppRouter {
               ),
             ],
           ),
-          // --- El resto de las pestañas se mantienen igual ---
+          // Pestaña 1: Inventario
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/inventory',
+                path: AppRoutes.inventory,
                 builder: (context, state) => const InventoryScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'create',
+                    builder: (context, state) => const CreateMaterialScreen(),
+                  ),
+                ],
               ),
             ],
           ),
+          // El resto de las pestañas se mantienen igual
           StatefulShellBranch(
             routes: [
               GoRoute(

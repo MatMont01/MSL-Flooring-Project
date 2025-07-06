@@ -9,4 +9,8 @@ class AppRoutes {
 
   // --- AÑADE ESTA LÍNEA ---
   static const String createProject = '/projects/create';
+  static const String inventory = '/inventory';
+
+  // --- AÑADE ESTA LÍNEA ---
+  static const String createMaterial = '/inventory/create';
 }

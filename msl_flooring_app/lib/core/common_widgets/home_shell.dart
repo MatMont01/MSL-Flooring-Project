@@ -1,9 +1,12 @@
 // lib/core/common_widgets/home_shell.dart
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:msl_flooring_app/core/providers/session_provider.dart';
 
-class HomeShell extends StatelessWidget {
+// 1. Lo convertimos en un ConsumerWidget para que pueda observar providers.
+class HomeShell extends ConsumerWidget {
   const HomeShell({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
@@ -16,37 +19,40 @@ class HomeShell extends StatelessWidget {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    // 2. OBSERVAMOS LA SESIÓN AQUÍ, EN EL WIDGET PADRE.
+    final session = ref.watch(sessionProvider);
+
+    // 3. SI LA SESIÓN NO ESTÁ LISTA, MOSTRAMOS UNA PANTALLA DE CARGA.
+    // Esto previene que cualquiera de las pestañas se construya prematuramente.
+    if (session == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
+
+    // 4. Si llegamos aquí, la sesión está lista. Construimos la UI normal.
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: navigationShell.currentIndex,
         onTap: (int index) => _onTap(context, index),
-        // Se recomienda añadir un tipo para evitar que el estilo cambie
-        // cuando hay más de 3 ítems.
         type: BottomNavigationBarType.fixed,
         items: const [
-          // Pestaña 0: Proyectos
           BottomNavigationBarItem(
             icon: Icon(Icons.business_center),
             label: 'Proyectos',
           ),
-          // Pestaña 1: Inventario
           BottomNavigationBarItem(
             icon: Icon(Icons.inventory),
             label: 'Inventario',
           ),
-          // Pestaña 2: Trabajadores
           BottomNavigationBarItem(
             icon: Icon(Icons.people),
             label: 'Trabajadores',
           ),
-          // Pestaña 3: Comunicaciones
           BottomNavigationBarItem(
             icon: Icon(Icons.chat_bubble_outline),
             label: 'Comunicaciones',
           ),
-          // Pestaña 4: Analíticas (NUEVA)
           BottomNavigationBarItem(
             icon: Icon(Icons.analytics),
             label: 'Analíticas',
