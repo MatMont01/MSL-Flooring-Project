@@ -17,7 +17,7 @@ import java.util.UUID;
 public class Worker {
 
     @Id
-    @GeneratedValue
+    //@GeneratedValue
     private UUID id;
 
     @Column(name = "first_name", nullable = false, length = 50)

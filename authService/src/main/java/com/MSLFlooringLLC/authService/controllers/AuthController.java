@@ -5,6 +5,7 @@ import com.MSLFlooringLLC.authService.domain.User;
 import com.MSLFlooringLLC.authService.dto.JwtResponse;
 import com.MSLFlooringLLC.authService.dto.LoginRequest;
 import com.MSLFlooringLLC.authService.dto.RegisterRequest;
+import com.MSLFlooringLLC.authService.dto.UserResponse;
 import com.MSLFlooringLLC.authService.service.AuthService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -29,9 +30,10 @@ public class AuthController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<Void> register(@Valid @RequestBody RegisterRequest request) {
-        authService.register(request);
-        return ResponseEntity.ok().build();
+    public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
+        User registeredUser = authService.register(request);
+        // Devolvemos el usuario creado con un código de estado 201
+        return new ResponseEntity<>(UserResponse.fromEntity(registeredUser), HttpStatus.CREATED);
     }
 
     @PostMapping("/logout")

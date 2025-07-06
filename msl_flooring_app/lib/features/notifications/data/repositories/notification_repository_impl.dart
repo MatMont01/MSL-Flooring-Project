@@ -15,9 +15,9 @@ class NotificationRepositoryImpl implements NotificationRepository {
   Future<List<NotificationEntity>> getAllNotifications() async {
     try {
       return await remoteDataSource.getAllNotifications();
-    } on Failure catch (e) {
+    } on Failure {
       // Si el error ya es una Falla conocida, la relanzamos.
-      throw e;
+      rethrow;
     } catch (e) {
       // Para cualquier otro error, lo envolvemos en una Falla genérica.
       throw const ServerFailure(
@@ -30,8 +30,8 @@ class NotificationRepositoryImpl implements NotificationRepository {
   Future<List<DocumentEntity>> getAllDocuments() async {
     try {
       return await remoteDataSource.getAllDocuments();
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al obtener los documentos.',

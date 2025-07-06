@@ -17,9 +17,9 @@ class InventoryRepositoryImpl implements InventoryRepository {
       // Llama al datasource para obtener los datos y los devuelve.
       // Como MaterialModel hereda de MaterialEntity, la conversión es implícita.
       return await remoteDataSource.getAllMaterials();
-    } on Failure catch (e) {
+    } on Failure {
       // Si el datasource lanza una Falla (ej. ServerFailure), la relanzamos.
-      throw e;
+      rethrow;
     } catch (e) {
       // Para cualquier otro error inesperado, lanzamos una falla genérica.
       throw const ServerFailure(
@@ -33,9 +33,9 @@ class InventoryRepositoryImpl implements InventoryRepository {
     try {
       // Llama al datasource para obtener la lista de herramientas.
       return await remoteDataSource.getAllTools();
-    } on Failure catch (e) {
+    } on Failure {
       // Relanzamos la falla para que la capa de presentación la maneje.
-      throw e;
+      rethrow;
     } catch (e) {
       // Atrapamos cualquier otro error y lo envolvemos en nuestra Falla.
       throw const ServerFailure(

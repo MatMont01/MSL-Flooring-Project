@@ -17,8 +17,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       await remoteDataSource.login(username, password);
-    } on Failure catch (e) {
-      throw e; // Lanza la misma falla para que la capa de presentación la maneje.
+    } on Failure {
+      rethrow; // Lanza la misma falla para que la capa de presentación la maneje.
     } catch (e) {
       // Para cualquier otro error inesperado.
       throw const ServerFailure('Ocurrió un error inesperado.');
@@ -33,8 +33,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       await remoteDataSource.register(username, email, password);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure('Ocurrió un error inesperado.');
     }

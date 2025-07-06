@@ -16,9 +16,9 @@ class WorkerRepositoryImpl implements WorkerRepository {
       // Llama al método del datasource para obtener los datos.
       // El WorkerModel es compatible con WorkerEntity porque lo hereda.
       return await remoteDataSource.getAllWorkers();
-    } on Failure catch (e) {
+    } on Failure {
       // Si el error ya es una de nuestras Fallas personalizadas, la relanzamos.
-      throw e;
+      rethrow;
     } catch (e) {
       // Si es cualquier otro tipo de error, lo envolvemos en una falla genérica.
       throw const ServerFailure(

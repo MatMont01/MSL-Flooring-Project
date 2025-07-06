@@ -1,5 +1,6 @@
 package com.example.worker_service.config;
 
+import com.example.worker_service.dto.UserResponse;
 import com.example.worker_service.dto.WorkerRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
@@ -32,7 +33,7 @@ public class AuthClient {
         return response.getBody();
     }
 
-    public boolean registerWorkerInAuthService(WorkerRequest req) {
+    public UserResponse registerWorkerInAuthService(WorkerRequest req) {
         HttpHeaders headers = new HttpHeaders();
         headers.setContentType(MediaType.APPLICATION_JSON);
 
@@ -45,15 +46,16 @@ public class AuthClient {
         HttpEntity<Map<String, Object>> entity = new HttpEntity<>(body, headers);
 
         try {
-            ResponseEntity<Void> response = restTemplate.postForEntity(
+            // Esperamos un UserResponse en lugar de Void
+            ResponseEntity<UserResponse> response = restTemplate.postForEntity(
                     authServiceUrl + "/api/auth/register",
                     entity,
-                    Void.class
+                    UserResponse.class
             );
-            return response.getStatusCode().is2xxSuccessful();
+            return response.getBody(); // Devolvemos el cuerpo de la respuesta
         } catch (Exception e) {
-            return false;
+            // Si falla, devolvemos null o lanzamos una excepción más específica
+            return null;
         }
     }
-
 }

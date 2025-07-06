@@ -17,10 +17,10 @@ class ProjectRepositoryImpl implements ProjectRepository {
       // Como ProjectModel hereda de ProjectEntity, la conversión es implícita
       // y no se necesita un mapeo adicional aquí.
       return await remoteDataSource.getAllProjects();
-    } on Failure catch (e) {
+    } on Failure {
       // Si el error ya es una de nuestras Fallas personalizadas (ej. ServerFailure),
       // simplemente la relanzamos para que la capa superior la maneje.
-      throw e;
+      rethrow;
     } catch (e) {
       // Si es cualquier otro tipo de error inesperado, lo envolvemos en nuestra
       // Falla genérica para mantener la consistencia.

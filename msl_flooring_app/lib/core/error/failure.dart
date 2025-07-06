@@ -13,10 +13,10 @@ abstract class Failure {
 
 // Falla específica para errores que vienen del servidor (ej. 401, 404, 500).
 class ServerFailure extends Failure {
-  const ServerFailure(String message) : super(message);
+  const ServerFailure(super.message);
 }
 
 // Falla para cuando no hay conexión a internet.
 class NetworkFailure extends Failure {
-  const NetworkFailure(String message) : super(message);
+  const NetworkFailure(super.message);
 }

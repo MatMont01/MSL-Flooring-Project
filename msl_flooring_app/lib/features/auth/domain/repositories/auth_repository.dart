@@ -1,6 +1,5 @@
 // lib/features/1_auth/domain/repositories/auth_repository.dart
 
-import '../../../../core/error/failure.dart';
 
 // Este es el contrato que la capa de datos deberá implementar.
 abstract class AuthRepository {

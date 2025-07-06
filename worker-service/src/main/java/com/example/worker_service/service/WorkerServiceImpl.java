@@ -2,10 +2,7 @@ package com.example.worker_service.service;
 
 import com.example.worker_service.domain.AttendanceRecord;
 import com.example.worker_service.domain.Worker;
-import com.example.worker_service.dto.AttendanceRecordRequest;
-import com.example.worker_service.dto.AttendanceRecordResponse;
-import com.example.worker_service.dto.WorkerRequest;
-import com.example.worker_service.dto.WorkerResponse;
+import com.example.worker_service.dto.*;
 import com.example.worker_service.repository.AttendanceRecordRepository;
 import com.example.worker_service.repository.WorkerRepository;
 import com.example.worker_service.config.AuthClient;
@@ -27,12 +24,15 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public WorkerResponse registerWorker(WorkerRequest request) {
-        boolean created = authClient.registerWorkerInAuthService(request);
-        if (!created) {
+        // 1. Llama a auth-service y espera la respuesta con los datos del usuario
+        UserResponse authUser = authClient.registerWorkerInAuthService(request);
+        if (authUser == null) {
             throw new RuntimeException("No se pudo crear el usuario en auth-service");
         }
 
+        // 2. Construye el Worker local
         Worker worker = Worker.builder()
+                .id(authUser.getId()) // <--- Usa el ID del servicio de autenticación
                 .firstName(request.getFirstName())
                 .lastName(request.getLastName())
                 .email(request.getEmail())
@@ -41,6 +41,7 @@ public class WorkerServiceImpl implements WorkerService {
                 .createdAt(ZonedDateTime.now())
                 .build();
 
+        // 3. Guarda el worker localmente
         Worker saved = workerRepository.save(worker);
 
         return toResponse(saved);
@@ -117,6 +118,7 @@ public class WorkerServiceImpl implements WorkerService {
                 .longitude(record.getLongitude())
                 .build();
     }
+
     @Override
     public Worker getWorkerById(UUID workerId) {
         return workerRepository.findById(workerId)

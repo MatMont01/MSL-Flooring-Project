@@ -24,11 +24,11 @@ public class WorkerController {
     private final WorkerService workerService;
 
     @PostMapping
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<WorkerResponse> registerWorker(@RequestBody WorkerRequest request) {
         WorkerResponse worker = workerService.registerWorker(request);
         return ResponseEntity.ok(worker);
     }
-
 
     @GetMapping
     @PreAuthorize("hasRole('ADMINISTRADOR')")
