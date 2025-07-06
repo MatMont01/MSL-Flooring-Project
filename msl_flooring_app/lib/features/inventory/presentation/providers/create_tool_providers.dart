@@ -1,11 +1,25 @@
 // lib/features/inventory/presentation/providers/create_tool_providers.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/api/api_client.dart';
-import '../../../../core/constants/api_constants.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
+import '../../data/datasources/tool_remote_data_source.dart';
+import '../../data/repositories/tool_repository_impl.dart';
+import '../../domain/entities/tool_entity.dart';
+import '../../domain/entities/tool_request_entity.dart';
+import '../../domain/repositories/tool_repository.dart';
 
-// Estados para la creación
+// --- Providers de infraestructura ---
+final toolRemoteDataSourceProvider = Provider<ToolRemoteDataSource>((ref) {
+  final apiClient = ref.watch(apiClientProvider);
+  return ToolRemoteDataSourceImpl(apiClient: apiClient);
+});
+
+final toolRepositoryProvider = Provider<ToolRepository>((ref) {
+  final remoteDataSource = ref.watch(toolRemoteDataSourceProvider);
+  return ToolRepositoryImpl(remoteDataSource: remoteDataSource);
+});
+
+// --- Estados para crear herramienta ---
 abstract class CreateToolState {}
 
 class CreateToolInitial extends CreateToolState {}
@@ -24,33 +38,32 @@ class CreateToolFailure extends CreateToolState {
   CreateToolFailure(this.message);
 }
 
-// Notifier
+// --- Notifier para crear herramienta ---
 class CreateToolNotifier extends StateNotifier<CreateToolState> {
-  final ApiClient _apiClient;
+  final ToolRepository _toolRepository;
 
-  CreateToolNotifier(this._apiClient) : super(CreateToolInitial());
+  CreateToolNotifier(this._toolRepository) : super(CreateToolInitial());
 
   Future<void> createTool(Map<String, dynamic> toolData) async {
     try {
       state = CreateToolLoading();
 
-      final response = await _apiClient.post(
-        ApiConstants.inventoryServiceBaseUrl,
-        '/tools',
-        toolData,
+      final toolRequest = ToolRequestEntity(
+        name: toolData['name'],
+        description: toolData['description'],
       );
 
-      final toolName = response['name'] as String? ?? 'Herramienta';
-      state = CreateToolSuccess(toolName);
+      final newTool = await _toolRepository.createTool(toolRequest);
+      state = CreateToolSuccess(newTool.name);
     } catch (e) {
       state = CreateToolFailure(e.toString());
     }
   }
 }
 
-// Provider
+// --- Provider del notifier ---
 final createToolProvider =
     StateNotifierProvider<CreateToolNotifier, CreateToolState>((ref) {
-      final apiClient = ref.watch(apiClientProvider);
-      return CreateToolNotifier(apiClient);
+      final toolRepository = ref.watch(toolRepositoryProvider);
+      return CreateToolNotifier(toolRepository);
     });

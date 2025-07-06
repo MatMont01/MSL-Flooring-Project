@@ -44,6 +44,31 @@ public class MaterialServiceImpl implements MaterialService {
                 .orElseThrow(() -> new RuntimeException("Material no encontrado"));
     }
 
+    // 🔧 NUEVO: Actualizar material
+    @Override
+    public MaterialResponse updateMaterial(UUID id, MaterialRequest request) {
+        Material existingMaterial = materialRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Material no encontrado"));
+
+        // Actualizar los campos
+        existingMaterial.setName(request.getName());
+        existingMaterial.setDescription(request.getDescription());
+        existingMaterial.setImageUrl(request.getImageUrl());
+        existingMaterial.setUnitPrice(request.getUnitPrice());
+        // createdAt se mantiene igual, no hay updatedAt en el modelo actual
+
+        return toResponse(materialRepository.save(existingMaterial));
+    }
+
+    // 🔧 NUEVO: Eliminar material
+    @Override
+    public void deleteMaterial(UUID id) {
+        if (!materialRepository.existsById(id)) {
+            throw new RuntimeException("Material no encontrado");
+        }
+        materialRepository.deleteById(id);
+    }
+
     private MaterialResponse toResponse(Material m) {
         return MaterialResponse.builder()
                 .id(m.getId())

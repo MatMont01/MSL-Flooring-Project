@@ -110,4 +110,50 @@ class InventoryRepositoryImpl implements InventoryRepository {
       );
     }
   }
+
+  // 🔧 NUEVOS MÉTODOS para movimientos de inventario
+  @override
+  Future<void> createInventoryMovement(
+    Map<String, dynamic> movementData,
+  ) async {
+    try {
+      await remoteDataSource.createInventoryMovement(movementData);
+    } on Failure {
+      rethrow;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al crear el movimiento de inventario.',
+      );
+    }
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getMovementsByMaterial(
+    String materialId,
+  ) async {
+    try {
+      return await remoteDataSource.getMovementsByMaterial(materialId);
+    } on Failure {
+      rethrow;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al obtener los movimientos.',
+      );
+    }
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getMovementsByProject(
+    String projectId,
+  ) async {
+    try {
+      return await remoteDataSource.getMovementsByProject(projectId);
+    } on Failure {
+      rethrow;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al obtener los movimieantos del proyecto.',
+      );
+    }
+  }
 }

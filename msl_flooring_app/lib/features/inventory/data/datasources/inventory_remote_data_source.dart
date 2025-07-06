@@ -16,6 +16,13 @@ abstract class InventoryRemoteDataSource {
   Future<InventoryItemModel> updateItem(InventoryItemModel item);
 
   Future<void> deleteItem(String itemId);
+
+  // 🔧 NUEVOS MÉTODOS para movimientos
+  Future<void> createInventoryMovement(Map<String, dynamic> movementData);
+
+  Future<List<Map<String, dynamic>>> getMovementsByMaterial(String materialId);
+
+  Future<List<Map<String, dynamic>>> getMovementsByProject(String projectId);
 }
 
 class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
@@ -117,5 +124,39 @@ class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
       ApiConstants.inventoryServiceBaseUrl,
       '/materials/$itemId',
     );
+  }
+
+  // 🔧 NUEVOS MÉTODOS para movimientos de inventario
+  @override
+  Future<void> createInventoryMovement(
+    Map<String, dynamic> movementData,
+  ) async {
+    await _apiClient.post(
+      ApiConstants.inventoryServiceBaseUrl,
+      '/inventory-movements',
+      movementData,
+    );
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getMovementsByMaterial(
+    String materialId,
+  ) async {
+    final response = await _apiClient.get(
+      ApiConstants.inventoryServiceBaseUrl,
+      '/inventory-movements/material/$materialId',
+    );
+    return List<Map<String, dynamic>>.from(response);
+  }
+
+  @override
+  Future<List<Map<String, dynamic>>> getMovementsByProject(
+    String projectId,
+  ) async {
+    final response = await _apiClient.get(
+      ApiConstants.inventoryServiceBaseUrl,
+      '/inventory-movements/project/$projectId',
+    );
+    return List<Map<String, dynamic>>.from(response);
   }
 }

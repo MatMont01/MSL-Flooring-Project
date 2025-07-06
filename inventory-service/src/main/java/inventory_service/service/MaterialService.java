@@ -12,4 +12,9 @@ public interface MaterialService {
     List<MaterialResponse> getAllMaterials();
 
     MaterialResponse getMaterialById(UUID id);
+
+    // 🔧 NUEVOS MÉTODOS
+    MaterialResponse updateMaterial(UUID id, MaterialRequest request);
+
+    void deleteMaterial(UUID id);
 }

@@ -12,4 +12,9 @@ public interface ToolService {
     List<ToolResponse> getAllTools();
 
     ToolResponse getToolById(UUID id);
+
+    // 🔧 NUEVOS MÉTODOS
+    ToolResponse updateTool(UUID id, ToolRequest request);
+
+    void deleteTool(UUID id);
 }

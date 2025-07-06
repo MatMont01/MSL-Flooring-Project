@@ -32,6 +32,7 @@ class _CreateToolScreenState extends ConsumerState<CreateToolScreen> {
         'description': _descriptionController.text,
       };
 
+      // Llamar al provider para crear la herramienta
       ref.read(createToolProvider.notifier).createTool(toolData);
     }
   }
@@ -40,6 +41,7 @@ class _CreateToolScreenState extends ConsumerState<CreateToolScreen> {
   Widget build(BuildContext context) {
     final createState = ref.watch(createToolProvider);
 
+    // Escuchar cambios de estado
     ref.listen<CreateToolState>(createToolProvider, (previous, next) {
       if (next is CreateToolSuccess) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -47,20 +49,19 @@ class _CreateToolScreenState extends ConsumerState<CreateToolScreen> {
             content: Text('Herramienta "${next.toolName}" creada exitosamente'),
           ),
         );
+        // Refrescar la lista de inventario
         ref.invalidate(inventoryListProvider);
         context.pop();
       }
       if (next is CreateToolFailure) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Error: ${next.message}')),
-        );
+        ScaffoldMessenger.of(
+          context,
+        ).showSnackBar(SnackBar(content: Text('Error: ${next.message}')));
       }
     });
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Crear Herramienta'),
-      ),
+      appBar: AppBar(title: const Text('Crear Herramienta')),
       body: Form(
         key: _formKey,
         child: Padding(
@@ -99,7 +100,9 @@ class _CreateToolScreenState extends ConsumerState<CreateToolScreen> {
               SizedBox(
                 width: double.infinity,
                 child: ElevatedButton(
-                  onPressed: createState is CreateToolLoading ? null : _submitForm,
+                  onPressed: createState is CreateToolLoading
+                      ? null
+                      : _submitForm,
                   child: createState is CreateToolLoading
                       ? const CircularProgressIndicator()
                       : const Text('Crear Herramienta'),

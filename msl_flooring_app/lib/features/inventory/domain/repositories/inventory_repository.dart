@@ -14,4 +14,11 @@ abstract class InventoryRepository {
   Future<InventoryItemEntity> updateItem(InventoryItemEntity item);
 
   Future<void> deleteItem(String itemId);
+
+  // 🔧 NUEVO: Para asignaciones de materiales
+  Future<void> createInventoryMovement(Map<String, dynamic> movementData);
+
+  Future<List<Map<String, dynamic>>> getMovementsByMaterial(String materialId);
+
+  Future<List<Map<String, dynamic>>> getMovementsByProject(String projectId);
 }

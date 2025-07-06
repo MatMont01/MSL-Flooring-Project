@@ -72,3 +72,6 @@ class InventoryListNotifier extends StateNotifier<InventoryListState> {
     }
   }
 }
+
+// 🔧 REMOVER TODO LO RELACIONADO CON MaterialAssignment de aquí
+// Ya está definido en material_assignment_providers.dart

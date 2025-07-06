@@ -18,9 +18,7 @@ class ApiClient {
 
   Map<String, String> _getHeaders() {
     final token = _sharedPreferences.getString(_authTokenKey);
-    print(
-      '[ApiClient] Using token: ${token?.substring(0, 15)}...',
-    ); // Log para ver el token
+    print('[ApiClient] Using token: ${token?.substring(0, 15)}...');
     return {
       'Content-Type': 'application/json',
       if (token != null) 'Authorization': 'Bearer $token',
@@ -33,7 +31,6 @@ class ApiClient {
 
     try {
       final response = await _client.get(uri, headers: _getHeaders());
-      // LLamamos a nuestro nuevo manejador de respuestas
       return _handleResponse(response, uri.toString());
     } on SocketException {
       print('[ApiClient] Network Error: No connection for $uri');
@@ -47,12 +44,11 @@ class ApiClient {
   }
 
   Future<dynamic> post(String baseUrl, String endpoint, dynamic body) async {
-    // Acepta 'dynamic'
     final Uri uri = Uri.parse('$baseUrl$endpoint');
     print('[ApiClient] Making POST request to: $uri');
+    print('[ApiClient] POST Body: ${jsonEncode(body)}'); // 🔧 LOG DEL BODY
 
     try {
-      // jsonEncode puede manejar tanto Mapas como Listas
       final response = await _client.post(
         uri,
         headers: _getHeaders(),
@@ -70,14 +66,12 @@ class ApiClient {
     }
   }
 
-  // --- MANEJADOR DE RESPUESTAS CON LOGS ---
+  // Manejador de respuestas con logs detallados
   dynamic _handleResponse(http.Response response, String url) {
     print(
       '[ApiClient] Response from $url - Status Code: ${response.statusCode}',
     );
-    print(
-      '[ApiClient] Response Body: ${response.body}',
-    ); // ¡EL LOG MÁS IMPORTANTE!
+    print('[ApiClient] Response Body: ${response.body}');
 
     if (response.statusCode >= 200 && response.statusCode < 300) {
       if (response.body.isEmpty) {
@@ -85,21 +79,34 @@ class ApiClient {
         return {};
       }
       try {
-        // Intentamos decodificar el JSON
         final decodedJson = jsonDecode(response.body);
         print('[ApiClient] JSON decoded successfully.');
         return decodedJson;
       } catch (e) {
         print('[ApiClient] !!! JSON DECODING FAILED !!! Error: $e');
-        // Si falla la decodificación, lanzamos una falla para que el Notifier la atrape.
         throw const ServerFailure(
           'Error al procesar la respuesta del servidor (JSON malformado).',
         );
       }
     } else {
-      // Si el código de estado no es exitoso
+      // 🔧 MEJOR MANEJO DE ERRORES
       print('[ApiClient] Request failed with status ${response.statusCode}.');
-      final errorMessage = 'Error del servidor: ${response.statusCode}';
+
+      String errorMessage = 'Error del servidor: ${response.statusCode}';
+
+      // Intentar extraer mensaje de error del backend
+      try {
+        final errorJson = jsonDecode(response.body);
+        if (errorJson['message'] != null) {
+          errorMessage = errorJson['message'];
+        } else if (errorJson['error'] != null) {
+          errorMessage = errorJson['error'];
+        }
+      } catch (e) {
+        // Si no se puede parsear, usar el mensaje genérico
+        print('[ApiClient] Could not parse error response: $e');
+      }
+
       throw ServerFailure(errorMessage);
     }
   }
@@ -110,25 +117,27 @@ class ApiClient {
     Map<String, dynamic> body,
   ) async {
     final url = Uri.parse('$baseUrl$endpoint');
+    print('[ApiClient] Making PUT request to: $url');
+
     final response = await http.put(
       url,
       body: jsonEncode(body),
-      headers: {'Content-Type': 'application/json'},
+      headers: _getHeaders(),
     );
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to update data');
-    }
+
+    return _handleResponse(response, url.toString());
   }
 
   Future<void> delete(String baseUrl, String endpoint) async {
     final url = Uri.parse('$baseUrl$endpoint');
-    final response = await http.delete(
-      url,
-      headers: {'Content-Type': 'application/json'},
-    );
-    if (response.statusCode != 200) {
+    print('[ApiClient] Making DELETE request to: $url');
+
+    final response = await http.delete(url, headers: _getHeaders());
+
+    if (response.statusCode == 204 || response.statusCode == 200) {
+      print('[ApiClient] DELETE successful: ${response.statusCode}');
+    } else {
+      print('[ApiClient] DELETE failed: ${response.statusCode}');
       throw Exception('Failed to delete data');
     }
   }
