@@ -7,6 +7,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -75,5 +76,20 @@ public class WorkerController {
         // Accedemos a la lista a través del getter del DTO
         List<WorkerResponse> workers = workerService.getWorkersByIds(request.getWorkerIds());
         return ResponseEntity.ok(workers);
+    }
+
+    @GetMapping("/attendance/status")
+    @PreAuthorize("hasRole('TRABAJADOR')")
+    public ResponseEntity<AttendanceRecordResponse> getAttendanceStatus(
+            @RequestParam UUID projectId,
+            Authentication authentication) {
+
+        // Obtenemos el ID del trabajador autenticado
+        UUID workerId = (UUID) authentication.getDetails();
+
+        // Buscamos el registro activo y lo devolvemos
+        return workerService.getActiveAttendanceRecord(workerId, projectId)
+                .map(ResponseEntity::ok) // Si se encuentra, devuelve 200 OK con el registro
+                .orElseGet(() -> ResponseEntity.notFound().build()); // Si no, devuelve 404 Not Found
     }
 }

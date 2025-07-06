@@ -20,6 +20,8 @@ abstract class WorkerRemoteDataSource {
     double latitude,
     double longitude,
   );
+
+  Future<AttendanceRecordModel?> getActiveAttendanceRecord(String projectId);
 }
 
 class WorkerRemoteDataSourceImpl implements WorkerRemoteDataSource {
@@ -49,7 +51,6 @@ class WorkerRemoteDataSourceImpl implements WorkerRemoteDataSource {
     return workerListJson.map((json) => WorkerModel.fromJson(json)).toList();
   }
 
-  // --- IMPLEMENTACIÓN DE checkIn ---
   @override
   Future<AttendanceRecordModel> checkIn(CheckInRequestModel checkInData) async {
     final response = await _apiClient.post(
@@ -60,7 +61,6 @@ class WorkerRemoteDataSourceImpl implements WorkerRemoteDataSource {
     return AttendanceRecordModel.fromJson(response);
   }
 
-  // --- IMPLEMENTACIÓN DE checkOut ---
   @override
   Future<AttendanceRecordModel> checkOut(
     String attendanceId,
@@ -76,5 +76,28 @@ class WorkerRemoteDataSourceImpl implements WorkerRemoteDataSource {
       body,
     );
     return AttendanceRecordModel.fromJson(response);
+  }
+
+  // --- IMPLEMENTACIÓN DEL NUEVO MÉTODO ---
+  @override
+  Future<AttendanceRecordModel?> getActiveAttendanceRecord(
+    String projectId,
+  ) async {
+    // Construimos el endpoint con el query parameter, ej: /attendance/status?projectId=123-abc
+    final endpoint = '/attendance/status?projectId=$projectId';
+
+    try {
+      final response = await _apiClient.get(
+        ApiConstants.workerServiceBaseUrl,
+        endpoint,
+      );
+      // Si la llamada es exitosa, la API devuelve el registro activo
+      return AttendanceRecordModel.fromJson(response);
+    } catch (e) {
+      // Si la API devuelve un 404 Not Found, nuestro ApiClient lanzará una Falla.
+      // Atrapamos esa falla y devolvemos null, que es lo que nuestra lógica espera
+      // cuando no hay un check-in activo.
+      return null;
+    }
   }
 }

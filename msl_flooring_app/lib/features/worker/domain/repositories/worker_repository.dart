@@ -9,15 +9,14 @@ abstract class WorkerRepository {
 
   Future<List<WorkerEntity>> getWorkersByIds(List<String> workerIds);
 
-  // --- AÑADE ESTOS NUEVOS MÉTODOS ---
-
-  // Realiza el check-in y devuelve el registro de asistencia creado.
   Future<AttendanceRecordEntity> checkIn(CheckInRequestEntity checkInData);
 
-  // Realiza el check-out y devuelve el registro de asistencia actualizado.
   Future<AttendanceRecordEntity> checkOut({
     required String attendanceId,
     required double latitude,
     required double longitude,
   });
+  // Obtiene el registro de asistencia activo para un trabajador en un proyecto.
+  // Puede devolver null si no hay ningún check-in activo.
+  Future<AttendanceRecordEntity?> getActiveAttendanceRecord(String projectId);
 }

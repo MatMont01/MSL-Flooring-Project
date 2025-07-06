@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZonedDateTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -52,6 +53,14 @@ public class WorkerServiceImpl implements WorkerService {
         return workerRepository.findAll().stream()
                 .map(this::toResponse)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public Optional<AttendanceRecordResponse> getActiveAttendanceRecord(UUID workerId, UUID projectId) {
+        // Llama al nuevo método del repositorio y mapea el resultado si existe
+        return attendanceRecordRepository
+                .findFirstByWorkerIdAndProjectIdAndCheckOutTimeIsNullOrderByCheckInTimeDesc(workerId, projectId)
+                .map(this::toAttendanceResponse);
     }
 
     @Override
@@ -131,4 +140,5 @@ public class WorkerServiceImpl implements WorkerService {
         return workerRepository.findById(workerId)
                 .orElseThrow(() -> new RuntimeException("Worker no encontrado con ID: " + workerId));
     }
+
 }

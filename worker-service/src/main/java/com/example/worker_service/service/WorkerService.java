@@ -7,6 +7,7 @@ import com.example.worker_service.dto.WorkerRequest;
 import com.example.worker_service.dto.WorkerResponse;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 public interface WorkerService {
@@ -25,4 +26,6 @@ public interface WorkerService {
     List<AttendanceRecordResponse> getAttendanceByProject(UUID projectId);
 
     List<WorkerResponse> getWorkersByIds(List<UUID> workerIds);
+
+    Optional<AttendanceRecordResponse> getActiveAttendanceRecord(UUID workerId, UUID projectId);
 }

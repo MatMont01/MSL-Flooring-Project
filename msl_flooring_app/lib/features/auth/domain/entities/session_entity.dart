@@ -1,20 +1,16 @@
 // lib/features/auth/domain/entities/session_entity.dart
 
 class SessionEntity {
+  final String id; // <-- AÑADE ESTA LÍNEA
   final String username;
   final List<String> roles;
 
   const SessionEntity({
+    required this.id, // <-- AÑADE ESTA LÍNEA
     required this.username,
     required this.roles,
   });
 
-  // --- GETTER CORREGIDO ---
-  // Un helper para saber si el usuario es administrador.
-  // Ahora es insensible a mayúsculas y minúsculas.
-  bool get isAdmin {
-    // Buscamos si alguno de los roles, convertido a minúsculas,
-    // es igual a "administrador".
-    return roles.any((role) => role.toLowerCase() == 'administrador');
-  }
+  bool get isAdmin =>
+      roles.any((role) => role.toLowerCase() == 'administrador');
 }

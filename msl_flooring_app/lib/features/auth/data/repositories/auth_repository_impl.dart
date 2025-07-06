@@ -16,11 +16,9 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     try {
-      // 1. Llama al datasource, que devuelve el modelo con toda la info
       final jwtResponse = await remoteDataSource.login(username, password);
-
-      // 2. Construye y devuelve la SessionEntity
       return SessionEntity(
+        id: jwtResponse.userId, // <-- AÑADE ESTA LÍNEA
         username: jwtResponse.username,
         roles: jwtResponse.roles,
       );

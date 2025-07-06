@@ -16,14 +16,10 @@ class WorkerRepositoryImpl implements WorkerRepository {
   @override
   Future<List<WorkerEntity>> getAllWorkers() async {
     try {
-      // Llama al método del datasource para obtener los datos.
-      // El WorkerModel es compatible con WorkerEntity porque lo hereda.
       return await remoteDataSource.getAllWorkers();
     } on Failure {
-      // Si el error ya es una de nuestras Fallas personalizadas, la relanzamos.
       rethrow;
     } catch (e) {
-      // Si es cualquier otro tipo de error, lo envolvemos en una falla genérica.
       throw const ServerFailure(
         'Ocurrió un error inesperado al obtener los trabajadores.',
       );
@@ -81,6 +77,26 @@ class WorkerRepositoryImpl implements WorkerRepository {
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al hacer check-out.',
+      );
+    }
+  }
+
+  // --- IMPLEMENTACIÓN DEL NUEVO MÉTODO ---
+  @override
+  Future<AttendanceRecordEntity?> getActiveAttendanceRecord(
+    String projectId,
+  ) async {
+    try {
+      // Simplemente pasamos la llamada al datasource.
+      // El datasource ya maneja el caso de devolver null si hay un 404.
+      return await remoteDataSource.getActiveAttendanceRecord(projectId);
+    } on Failure catch (e) {
+      // Si es una falla que ya conocemos (diferente de 404), la relanzamos.
+      throw e;
+    } catch (e) {
+      // Para cualquier otro error inesperado.
+      throw const ServerFailure(
+        'Ocurrió un error al consultar el estado de la asistencia.',
       );
     }
   }
