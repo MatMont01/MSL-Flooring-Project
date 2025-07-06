@@ -1,18 +1,19 @@
-// lib/features/inventory/data/datasources/inventory_remote_data_source.dart
-
 import '../../../../core/api/api_client.dart';
 import '../../../../core/constants/api_constants.dart';
-import '../models/material_model.dart';
-import '../models/material_request_model.dart'; // Importa el nuevo modelo
-import '../models/tool_model.dart';
+import '../models/inventory_item_model.dart';
 
 abstract class InventoryRemoteDataSource {
-  Future<List<MaterialModel>> getAllMaterials();
+  Future<List<InventoryItemModel>> getAllItems();
 
-  Future<List<ToolModel>> getAllTools();
+  Future<List<InventoryItemModel>> getItemsByProject(String projectId);
 
-  // --- AÑADE ESTE NUEVO MÉTODO ---
-  Future<MaterialModel> createMaterial(MaterialRequestModel material);
+  Future<InventoryItemModel> getItemById(String itemId);
+
+  Future<InventoryItemModel> createItem(InventoryItemModel item);
+
+  Future<InventoryItemModel> updateItem(InventoryItemModel item);
+
+  Future<void> deleteItem(String itemId);
 }
 
 class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
@@ -22,37 +23,60 @@ class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
     : _apiClient = apiClient;
 
   @override
-  Future<List<MaterialModel>> getAllMaterials() async {
+  Future<List<InventoryItemModel>> getAllItems() async {
     final response = await _apiClient.get(
       ApiConstants.inventoryServiceBaseUrl,
-      '/materials',
+      '',
     );
-    final List<dynamic> materialListJson = response;
-    return materialListJson
-        .map((json) => MaterialModel.fromJson(json))
+    final List<dynamic> itemListJson = response;
+    return itemListJson
+        .map((json) => InventoryItemModel.fromJson(json))
         .toList();
   }
 
   @override
-  Future<List<ToolModel>> getAllTools() async {
+  Future<List<InventoryItemModel>> getItemsByProject(String projectId) async {
     final response = await _apiClient.get(
       ApiConstants.inventoryServiceBaseUrl,
-      '/tools',
+      '/project/$projectId',
     );
-    final List<dynamic> toolListJson = response;
-    return toolListJson.map((json) => ToolModel.fromJson(json)).toList();
+    final List<dynamic> itemListJson = response;
+    return itemListJson
+        .map((json) => InventoryItemModel.fromJson(json))
+        .toList();
   }
 
-  // --- IMPLEMENTACIÓN DEL NUEVO MÉTODO ---
   @override
-  Future<MaterialModel> createMaterial(MaterialRequestModel material) async {
+  Future<InventoryItemModel> getItemById(String itemId) async {
+    final response = await _apiClient.get(
+      ApiConstants.inventoryServiceBaseUrl,
+      '/$itemId',
+    );
+    return InventoryItemModel.fromJson(response);
+  }
+
+  @override
+  Future<InventoryItemModel> createItem(InventoryItemModel item) async {
     final response = await _apiClient.post(
       ApiConstants.inventoryServiceBaseUrl,
-      '/materials', // El endpoint POST está en la raíz de materials
-      material.toJson(), // Usamos el método toJson() para el cuerpo
+      '',
+      item.toJson(),
     );
+    return InventoryItemModel.fromJson(response);
+  }
 
-    // La API devuelve el material recién creado como un solo objeto JSON
-    return MaterialModel.fromJson(response);
+  @override
+  Future<InventoryItemModel> updateItem(InventoryItemModel item) async {
+    final response = await _apiClient.put(
+      ApiConstants.inventoryServiceBaseUrl,
+      '/${item.id}',
+      item.toJson(),
+    );
+    return InventoryItemModel.fromJson(response);
+  }
+
+  @override
+  Future<void> deleteItem(String itemId) async {
+    await _apiClient.delete(ApiConstants.inventoryServiceBaseUrl, '/$itemId');
   }
 }

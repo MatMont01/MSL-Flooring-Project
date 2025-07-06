@@ -22,8 +22,8 @@ class AuthRepositoryImpl implements AuthRepository {
         username: jwtResponse.username,
         roles: jwtResponse.roles,
       );
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure('Ocurrió un error inesperado.');
     }
@@ -38,8 +38,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       await remoteDataSource.register(username, email, password);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure('Ocurrió un error inesperado.');
     }

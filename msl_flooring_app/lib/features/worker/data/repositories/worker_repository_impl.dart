@@ -30,8 +30,8 @@ class WorkerRepositoryImpl implements WorkerRepository {
   Future<List<WorkerEntity>> getWorkersByIds(List<String> workerIds) async {
     try {
       return await remoteDataSource.getWorkersByIds(workerIds);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al obtener los detalles de los trabajadores.',
@@ -54,8 +54,8 @@ class WorkerRepositoryImpl implements WorkerRepository {
       );
       // Llamamos al datasource y devolvemos el resultado
       return await remoteDataSource.checkIn(requestModel);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al hacer check-in.',
@@ -72,8 +72,8 @@ class WorkerRepositoryImpl implements WorkerRepository {
   }) async {
     try {
       return await remoteDataSource.checkOut(attendanceId, latitude, longitude);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al hacer check-out.',
@@ -90,9 +90,9 @@ class WorkerRepositoryImpl implements WorkerRepository {
       // Simplemente pasamos la llamada al datasource.
       // El datasource ya maneja el caso de devolver null si hay un 404.
       return await remoteDataSource.getActiveAttendanceRecord(projectId);
-    } on Failure catch (e) {
+    } on Failure {
       // Si es una falla que ya conocemos (diferente de 404), la relanzamos.
-      throw e;
+      rethrow;
     } catch (e) {
       // Para cualquier otro error inesperado.
       throw const ServerFailure(

@@ -103,4 +103,33 @@ class ApiClient {
       throw ServerFailure(errorMessage);
     }
   }
+
+  Future<dynamic> put(
+    String baseUrl,
+    String endpoint,
+    Map<String, dynamic> body,
+  ) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final response = await http.put(
+      url,
+      body: jsonEncode(body),
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to update data');
+    }
+  }
+
+  Future<void> delete(String baseUrl, String endpoint) async {
+    final url = Uri.parse('$baseUrl$endpoint');
+    final response = await http.delete(
+      url,
+      headers: {'Content-Type': 'application/json'},
+    );
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete data');
+    }
+  }
 }

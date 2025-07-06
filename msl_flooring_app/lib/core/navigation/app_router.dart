@@ -68,7 +68,7 @@ class AppRouter {
                 builder: (context, state) => const InventoryScreen(),
                 routes: [
                   GoRoute(
-                    path: 'create',
+                    path: AppRoutes.createMaterial,
                     builder: (context, state) => const CreateMaterialScreen(),
                   ),
                 ],

@@ -1,6 +1,5 @@
 // lib/features/auth/domain/repositories/auth_repository.dart
 
-import '../../../../core/error/failure.dart';
 import '../entities/session_entity.dart'; // Importar la nueva entidad
 
 // Este es el contrato que la capa de datos deberá implementar.

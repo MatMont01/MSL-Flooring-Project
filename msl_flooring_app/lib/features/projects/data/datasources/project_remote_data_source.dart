@@ -1,6 +1,5 @@
 // lib/features/projects/data/datasources/project_remote_data_source.dart
 
-import 'dart:developer';
 import '../../../../core/api/api_client.dart';
 import '../../../../core/constants/api_constants.dart';
 import '../models/project_model.dart';
@@ -28,7 +27,7 @@ class ProjectRemoteDataSourceImpl implements ProjectRemoteDataSource {
 
   @override
   Future<List<ProjectModel>> getAllProjects() async {
-    final url = '${ApiConstants.projectServiceBaseUrl}';
+    final url = ApiConstants.projectServiceBaseUrl;
     print('[ProjectDataSource] Calling GET $url');
     final response = await _apiClient.get(
       ApiConstants.projectServiceBaseUrl,
@@ -53,7 +52,7 @@ class ProjectRemoteDataSourceImpl implements ProjectRemoteDataSource {
   // --- IMPLEMENTACIÓN DEL NUEVO MÉTODO ---
   @override
   Future<ProjectModel> createProject(ProjectRequestModel project) async {
-    final url = '${ApiConstants.projectServiceBaseUrl}';
+    final url = ApiConstants.projectServiceBaseUrl;
     print('[ProjectDataSource] Calling POST $url');
 
     final response = await _apiClient.post(

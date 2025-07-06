@@ -16,8 +16,8 @@ class ProjectRepositoryImpl implements ProjectRepository {
   Future<List<ProjectEntity>> getAllProjects() async {
     try {
       return await remoteDataSource.getAllProjects();
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al obtener los proyectos.',
@@ -29,8 +29,8 @@ class ProjectRepositoryImpl implements ProjectRepository {
   Future<List<ProjectEntity>> getAssignedProjects() async {
     try {
       return await remoteDataSource.getAssignedProjects();
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al obtener los proyectos asignados.',
@@ -53,8 +53,8 @@ class ProjectRepositoryImpl implements ProjectRepository {
         longitude: project.longitude,
       );
       return await remoteDataSource.createProject(projectModel);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al crear el proyecto.',
@@ -66,8 +66,8 @@ class ProjectRepositoryImpl implements ProjectRepository {
   Future<ProjectEntity> getProjectById(String projectId) async {
     try {
       return await remoteDataSource.getProjectById(projectId);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al obtener los detalles del proyecto.',
@@ -80,8 +80,8 @@ class ProjectRepositoryImpl implements ProjectRepository {
   Future<List<String>> getWorkerIdsByProject(String projectId) async {
     try {
       return await remoteDataSource.getWorkerIdsByProject(projectId);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al obtener los trabajadores del proyecto.',
@@ -100,8 +100,8 @@ class ProjectRepositoryImpl implements ProjectRepository {
         workerId: workerId,
       );
       await remoteDataSource.assignWorkerToProject(requestModel);
-    } on Failure catch (e) {
-      throw e;
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
         'Ocurrió un error inesperado al asignar el trabajador.',

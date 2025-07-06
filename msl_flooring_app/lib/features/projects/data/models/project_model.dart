@@ -26,7 +26,7 @@ class ProjectModel extends ProjectEntity {
     // Si es una fecha completa, la normalizamos para que tenga 6 dígitos de microsegundos
     // si es necesario, para evitar errores de formato.
     return DateTime.parse(
-      dateString.replaceAll('Z', '').padRight(26, '0') + 'Z',
+      '${dateString.replaceAll('Z', '').padRight(26, '0')}Z',
     );
   }
 

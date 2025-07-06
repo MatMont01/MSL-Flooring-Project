@@ -1,12 +1,9 @@
 // lib/features/inventory/data/repositories/inventory_repository_impl.dart
-
 import '../../../../core/error/failure.dart';
-import '../../domain/entities/material_entity.dart';
-import '../../domain/entities/material_request_entity.dart';
-import '../../domain/entities/tool_entity.dart';
+import '../../domain/entities/inventory_item_entity.dart';
 import '../../domain/repositories/inventory_repository.dart';
 import '../datasources/inventory_remote_data_source.dart';
-import '../models/material_request_model.dart';
+import '../models/inventory_item_model.dart';
 
 class InventoryRepositoryImpl implements InventoryRepository {
   final InventoryRemoteDataSource remoteDataSource;
@@ -14,50 +11,101 @@ class InventoryRepositoryImpl implements InventoryRepository {
   InventoryRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<List<MaterialEntity>> getAllMaterials() async {
+  Future<List<InventoryItemEntity>> getAllItems() async {
     try {
-      return await remoteDataSource.getAllMaterials();
-    } on Failure catch (e) {
-      throw e;
+      return await remoteDataSource.getAllItems();
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
-        'Ocurrió un error inesperado al obtener los materiales.',
+        'Ocurrió un error inesperado al obtener los elementos del inventario.',
       );
     }
   }
 
   @override
-  Future<List<ToolEntity>> getAllTools() async {
+  Future<List<InventoryItemEntity>> getItemsByProject(String projectId) async {
     try {
-      return await remoteDataSource.getAllTools();
-    } on Failure catch (e) {
-      throw e;
+      return await remoteDataSource.getItemsByProject(projectId);
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
-        'Ocurrió un error inesperado al obtener las herramientas.',
+        'Ocurrió un error inesperado al obtener los elementos del proyecto.',
       );
     }
   }
 
-  // --- IMPLEMENTACIÓN DEL NUEVO MÉTODO ---
   @override
-  Future<MaterialEntity> createMaterial(MaterialRequestEntity material) async {
+  Future<InventoryItemEntity> getItemById(String itemId) async {
     try {
-      // Convertimos la entidad del dominio a un modelo de datos
-      // para poder acceder al método toJson().
-      final materialModel = MaterialRequestModel(
-        name: material.name,
-        description: material.description,
-        imageUrl: material.imageUrl,
-        unitPrice: material.unitPrice,
-      );
-      // Llamamos al datasource y devolvemos el resultado.
-      return await remoteDataSource.createMaterial(materialModel);
-    } on Failure catch (e) {
-      throw e;
+      return await remoteDataSource.getItemById(itemId);
+    } on Failure {
+      rethrow;
     } catch (e) {
       throw const ServerFailure(
-        'Ocurrió un error inesperado al crear el material.',
+        'Ocurrió un error inesperado al obtener el elemento.',
+      );
+    }
+  }
+
+  @override
+  Future<InventoryItemEntity> createItem(InventoryItemEntity item) async {
+    try {
+      final model = InventoryItemModel(
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        category: item.category,
+        projectId: item.projectId,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+      );
+      return await remoteDataSource.createItem(model);
+    } on Failure {
+      rethrow;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al crear el elemento.',
+      );
+    }
+  }
+
+  @override
+  Future<InventoryItemEntity> updateItem(InventoryItemEntity item) async {
+    try {
+      final model = InventoryItemModel(
+        id: item.id,
+        name: item.name,
+        description: item.description,
+        quantity: item.quantity,
+        unitPrice: item.unitPrice,
+        category: item.category,
+        projectId: item.projectId,
+        createdAt: item.createdAt,
+        updatedAt: item.updatedAt,
+      );
+      return await remoteDataSource.updateItem(model);
+    } on Failure {
+      rethrow;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al actualizar el elemento.',
+      );
+    }
+  }
+
+  @override
+  Future<void> deleteItem(String itemId) async {
+    try {
+      await remoteDataSource.deleteItem(itemId);
+    } on Failure {
+      rethrow;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al eliminar el elemento.',
       );
     }
   }

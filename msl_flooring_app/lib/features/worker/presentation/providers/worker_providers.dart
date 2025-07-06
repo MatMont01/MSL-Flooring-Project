@@ -1,7 +1,6 @@
 // lib/features/worker/presentation/providers/worker_providers.dart
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/providers/session_provider.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../data/datasources/worker_remote_data_source.dart';
 import '../../data/repositories/worker_repository_impl.dart';
