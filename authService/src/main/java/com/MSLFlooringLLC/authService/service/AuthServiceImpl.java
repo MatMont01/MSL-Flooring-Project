@@ -1,3 +1,5 @@
+// authService/src/main/java/com/MSLFlooringLLC/authService/service/AuthServiceImpl.java
+
 package com.MSLFlooringLLC.authService.service;
 
 import com.MSLFlooringLLC.authService.domain.RevokedToken;
@@ -40,6 +42,7 @@ public class AuthServiceImpl implements AuthService {
         return new JwtResponse(
                 token,
                 "Bearer",
+                user.getId().toString(),  // 👈 AÑADIR EL userId AQUÍ
                 user.getUsername(),
                 user.getRoles().stream().map(Role::getName).collect(Collectors.toList())
         );
@@ -93,5 +96,4 @@ public class AuthServiceImpl implements AuthService {
         return userRepository.findByUsername(username)
                 .orElseThrow(() -> new AuthException("Usuario no encontrado"));
     }
-
 }

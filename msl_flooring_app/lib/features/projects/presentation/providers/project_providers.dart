@@ -195,13 +195,17 @@ class ProjectDetailsNotifier extends StateNotifier<ProjectDetailsState> {
   }
 }
 
-final projectDetailsProvider = StateNotifierProvider.autoDispose
-    .family<ProjectDetailsNotifier, ProjectDetailsState, String>((
-      ref,
-      projectId,
-    ) {
+final projectDetailsProvider =
+    StateNotifierProvider.family<
+      ProjectDetailsNotifier,
+      ProjectDetailsState,
+      String
+    >((ref, projectId) {
       final projectRepository = ref.watch(projectRepositoryProvider);
-      return ProjectDetailsNotifier(projectRepository);
+      final notifier = ProjectDetailsNotifier(projectRepository);
+      // 👇 AÑADE ESTO - fetch automáticamente cuando se crea
+      notifier.fetchProjectDetails(projectId);
+      return notifier;
     });
 
 // --- Providers y Lógica para los Trabajadores Asignados a un Proyecto ---
@@ -233,21 +237,30 @@ class AssignedWorkersNotifier extends StateNotifier<AssignedWorkersState> {
   AssignedWorkersNotifier(this._projectRepository, this._workerRepository)
     : super(AssignedWorkersInitial());
 
+  // En el AssignedWorkersNotifier, busca el método fetchAssignedWorkers y añade logs:
+
   Future<void> fetchAssignedWorkers(String projectId) async {
+    print('🔍 [AssignedWorkers] Fetching workers for project: $projectId');
     try {
       state = AssignedWorkersLoading();
+      print('🔍 [AssignedWorkers] State set to Loading');
+
       final workerIds = await _projectRepository.getWorkerIdsByProject(
         projectId,
       );
+      print('🔍 [AssignedWorkers] Got worker IDs: $workerIds');
 
       if (workerIds.isEmpty) {
+        print('🔍 [AssignedWorkers] No workers found, setting empty list');
         state = AssignedWorkersSuccess(workers: []);
         return;
       }
 
       final workers = await _workerRepository.getWorkersByIds(workerIds);
+      print('🔍 [AssignedWorkers] Got ${workers.length} workers');
       state = AssignedWorkersSuccess(workers: workers);
     } catch (e) {
+      print('🔴 [AssignedWorkers] Error: $e');
       state = AssignedWorkersFailure(e.toString());
     }
   }

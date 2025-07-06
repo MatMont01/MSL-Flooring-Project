@@ -10,11 +10,11 @@ import '../../features/analytics/presentation/screens/analytics_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/inventory/presentation/screens/create_material_screen.dart';
 import '../../features/inventory/presentation/screens/inventory_screen.dart';
-
 import '../../features/notifications/presentation/screens/notification_screen.dart';
 import '../../features/projects/presentation/screens/create_project_screen.dart';
 import '../../features/projects/presentation/screens/project_details_screen.dart';
-import '../../features/projects/presentation/screens/project_list_screen.dart';
+import '../../features/projects/presentation/screens/project_list_screen.dart'
+    as projects;
 import '../../features/worker/presentation/screens/worker_list_screen.dart';
 import 'app_routes.dart';
 
@@ -33,7 +33,6 @@ class AppRouter {
       ),
       // --- Ruta Contenedora Principal (Shell Route) CORREGIDA ---
       StatefulShellRoute.indexedStack(
-        // En lugar de devolver HomeShell directamente, usamos nuestro SessionHandler.
         builder: (context, state, navigationShell) {
           return SessionHandler(navigationShell: navigationShell);
         },
@@ -43,7 +42,8 @@ class AppRouter {
             routes: [
               GoRoute(
                 path: AppRoutes.home,
-                builder: (context, state) => const ProjectListScreen(),
+                builder: (context, state) => const projects.ProjectListScreen(),
+                // 👈 USA EL ALIAS
                 routes: [
                   GoRoute(
                     path: 'create',
@@ -68,7 +68,7 @@ class AppRouter {
                 builder: (context, state) => const InventoryScreen(),
                 routes: [
                   GoRoute(
-                    path: AppRoutes.createMaterial,
+                    path: 'create-material',
                     builder: (context, state) => const CreateMaterialScreen(),
                   ),
                 ],

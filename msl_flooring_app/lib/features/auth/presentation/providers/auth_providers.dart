@@ -14,32 +14,55 @@ import '../../domain/repositories/auth_repository.dart';
 // --- Providers para la infraestructura de datos (VERSIÓN CORREGIDA) ---
 
 // 1. Provider para SharedPreferences (se mantiene igual, es la fuente del Future)
-final sharedPreferencesProvider = FutureProvider<SharedPreferences>(
-  (ref) => SharedPreferences.getInstance(),
-);
+final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) {
+  print('🔥 [AuthProviders] Creating SharedPreferences');
+  return SharedPreferences.getInstance();
+});
 
 // 2. Provider para nuestro ApiClient. Ahora también depende del Future.
 final apiClientProvider = Provider<ApiClient>((ref) {
-  // Aquí usamos .requireValue para asegurarnos de que solo se construya
-  // cuando SharedPreferences esté listo. Esto se maneja en la UI.
-  final sharedPreferences = ref.watch(sharedPreferencesProvider).requireValue;
-  return ApiClient(sharedPreferences: sharedPreferences, client: http.Client());
+  print('🔥 [AuthProviders] Creating ApiClient');
+  try {
+    final sharedPreferences = ref.watch(sharedPreferencesProvider).requireValue;
+    print('🔥 [AuthProviders] ApiClient created successfully');
+    return ApiClient(
+      sharedPreferences: sharedPreferences,
+      client: http.Client(),
+    );
+  } catch (e) {
+    print('🔴 [AuthProviders] Error creating ApiClient: $e');
+    rethrow;
+  }
 });
 
 // 3. Provider para el AuthRemoteDataSource
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
-  final apiClient = ref.watch(apiClientProvider);
-  final sharedPreferences = ref.watch(sharedPreferencesProvider).requireValue;
-  return AuthRemoteDataSourceImpl(
-    apiClient: apiClient,
-    sharedPreferences: sharedPreferences,
-  );
+  print('🔥 [AuthProviders] Creating AuthRemoteDataSource');
+  try {
+    final apiClient = ref.watch(apiClientProvider);
+    final sharedPreferences = ref.watch(sharedPreferencesProvider).requireValue;
+    print('🔥 [AuthProviders] AuthRemoteDataSource created successfully');
+    return AuthRemoteDataSourceImpl(
+      apiClient: apiClient,
+      sharedPreferences: sharedPreferences,
+    );
+  } catch (e) {
+    print('🔴 [AuthProviders] Error creating AuthRemoteDataSource: $e');
+    rethrow;
+  }
 });
 
 // 4. Provider para el AuthRepository
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
-  final remoteDataSource = ref.watch(authRemoteDataSourceProvider);
-  return AuthRepositoryImpl(remoteDataSource: remoteDataSource);
+  print('🔥 [AuthProviders] Creating AuthRepository');
+  try {
+    final remoteDataSource = ref.watch(authRemoteDataSourceProvider);
+    print('🔥 [AuthProviders] AuthRepository created successfully');
+    return AuthRepositoryImpl(remoteDataSource: remoteDataSource);
+  } catch (e) {
+    print('🔴 [AuthProviders] Error creating AuthRepository: $e');
+    rethrow;
+  }
 });
 
 // --- Provider para la lógica de negocio (Notifier) ---
@@ -48,8 +71,15 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((
   ref,
 ) {
-  final authRepository = ref.watch(authRepositoryProvider);
-  return AuthNotifier(authRepository, ref);
+  print('🔥 [AuthProviders] Creating AuthNotifier');
+  try {
+    final authRepository = ref.watch(authRepositoryProvider);
+    print('🔥 [AuthProviders] AuthNotifier created successfully');
+    return AuthNotifier(authRepository, ref);
+  } catch (e) {
+    print('🔴 [AuthProviders] Error creating AuthNotifier: $e');
+    rethrow;
+  }
 });
 
 // --- Clases de Estado (se mantienen igual) ---
@@ -79,15 +109,25 @@ class AuthNotifier extends StateNotifier<AuthState> {
   AuthNotifier(this._authRepository, this._ref) : super(AuthInitial());
 
   Future<void> login(String username, String password) async {
+    print('🔥 [AuthNotifier] Starting login for user: $username');
     try {
       state = AuthLoading();
+      print('🔥 [AuthNotifier] State set to Loading');
+
       final session = await _authRepository.login(
         username: username,
         password: password,
       );
+      print('🔥 [AuthNotifier] Login successful, session: ${session.username}');
+
       _ref.read(sessionProvider.notifier).setSession(session);
+      print('🔥 [AuthNotifier] Session set in provider');
+
       state = AuthSuccess(session);
-    } catch (e) {
+      print('🔥 [AuthNotifier] State set to Success');
+    } catch (e, stackTrace) {
+      print('🔴 [AuthNotifier] Login failed: $e');
+      print('🔴 [AuthNotifier] StackTrace: $stackTrace');
       state = AuthFailure(e.toString());
     }
   }

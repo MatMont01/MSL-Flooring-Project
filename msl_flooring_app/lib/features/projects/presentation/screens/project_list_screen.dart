@@ -7,7 +7,7 @@ import 'package:msl_flooring_app/core/providers/session_provider.dart';
 import '../../../../core/navigation/app_routes.dart';
 import '../providers/project_providers.dart';
 
-class ProjectListScreen extends ConsumerStatefulWidget {
+class ProjectListScreen extends ConsumerStatefulWidget { // 👈 ASEGÚRATE DE QUE ESTA LÍNEA EXISTE
   const ProjectListScreen({super.key});
 
   @override
@@ -26,8 +26,6 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
   @override
   Widget build(BuildContext context) {
     final projectsState = ref.watch(projectListProvider);
-
-    // 1. Observamos el proveedor de sesión para saber el rol del usuario
     final sessionState = ref.watch(sessionProvider);
     final bool isAdmin = sessionState?.isAdmin ?? false;
 
@@ -43,19 +41,15 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
           ),
         ],
       ),
-      // 2. Añadimos el FloatingActionButton
       floatingActionButton: isAdmin
           ? FloatingActionButton(
-              onPressed: () {
-                // Navegamos a la ruta de creación de proyectos
-                // GoRouter entiende que debe ir a /projects/create
-                context.push(
-                  AppRoutes.createProject,
-                ); // <-- MODIFICA ESTA LÍNEA
-              },
-              child: const Icon(Icons.add),
-            )
-          : null, // Si no es admin, el botón no se muestra (es nulo)
+        heroTag: "projects_fab", // 👈 HEROTAG ÚNICO
+        onPressed: () {
+          context.push(AppRoutes.createProject);
+        },
+        child: const Icon(Icons.add),
+      )
+          : null,
       body: Center(
         child: switch (projectsState) {
           ProjectListInitial() ||
@@ -67,24 +61,22 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
             child: projects.isEmpty
                 ? const Center(child: Text('No hay proyectos para mostrar.'))
                 : ListView.builder(
-                    itemCount: projects.length,
-                    itemBuilder: (context, index) {
-                      final project = projects[index];
-                      return ListTile(
-                        leading: CircleAvatar(
-                          child: Text('${project.percentCompleted.toInt()}%'),
-                        ),
-                        title: Text(project.name),
-                        subtitle: Text(project.description),
-                        onTap: () {
-                          // Navegamos a la ruta de detalles, pasando el ID del proyecto.
-                          // GoRouter construirá la URL /projects/{project.id}
-                          // usamos context.push para apilar la pantalla
-                          context.push('${AppRoutes.home}/${project.id}');
-                        },
-                      );
-                    },
+              itemCount: projects.length,
+              itemBuilder: (context, index) {
+                final project = projects[index];
+                return ListTile(
+                  leading: CircleAvatar(
+                    child: Text('${project.percentCompleted.toInt()}%'),
                   ),
+                  title: Text(project.name),
+                  subtitle: Text(project.description),
+                  onTap: () {
+                    print('🔍 Navegando a detalles del proyecto: ${project.id}');
+                    context.push('${AppRoutes.home}/${project.id}');
+                  },
+                );
+              },
+            ),
           ),
           ProjectListFailure(message: final message) => Column(
             mainAxisAlignment: MainAxisAlignment.center,
@@ -99,7 +91,6 @@ class _ProjectListScreenState extends ConsumerState<ProjectListScreen> {
               ),
             ],
           ),
-          // TODO: Handle this case.
           ProjectListState() => throw UnimplementedError(),
         },
       ),

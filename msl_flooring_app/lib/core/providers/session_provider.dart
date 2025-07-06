@@ -27,9 +27,8 @@ final sessionProvider = StateNotifierProvider<SessionNotifier, SessionEntity?>((
 // Este provider deriva su estado del sessionProvider.
 // Su única misión es devolver un booleano: true si es admin, false si no.
 // Es la forma más limpia y reactiva de obtener este valor.
+// En tu session_provider.dart, verifica que el isAdminProvider esté bien:
 final isAdminProvider = Provider<bool>((ref) {
-  // Observa el sessionProvider.
   final session = ref.watch(sessionProvider);
-  // Devuelve el valor de 'isAdmin' o 'false' si la sesión es nula.
   return session?.isAdmin ?? false;
 });

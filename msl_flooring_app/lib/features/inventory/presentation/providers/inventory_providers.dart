@@ -1,4 +1,5 @@
 // lib/features/inventory/presentation/providers/inventory_providers.dart
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../auth/presentation/providers/auth_providers.dart';
 import '../../data/datasources/inventory_remote_data_source.dart';
@@ -7,7 +8,9 @@ import '../../domain/entities/inventory_item_entity.dart';
 import '../../domain/repositories/inventory_repository.dart';
 
 // --- Providers de infraestructura ---
-final inventoryRemoteDataSourceProvider = Provider<InventoryRemoteDataSource>((ref) {
+final inventoryRemoteDataSourceProvider = Provider<InventoryRemoteDataSource>((
+  ref,
+) {
   final apiClient = ref.watch(apiClientProvider);
   return InventoryRemoteDataSourceImpl(apiClient: apiClient);
 });
@@ -19,10 +22,10 @@ final inventoryRepositoryProvider = Provider<InventoryRepository>((ref) {
 
 // --- State Notifier para la lista de inventario ---
 final inventoryListProvider =
-StateNotifierProvider<InventoryListNotifier, InventoryListState>((ref) {
-  final repository = ref.watch(inventoryRepositoryProvider);
-  return InventoryListNotifier(repository);
-});
+    StateNotifierProvider<InventoryListNotifier, InventoryListState>((ref) {
+      final repository = ref.watch(inventoryRepositoryProvider);
+      return InventoryListNotifier(repository);
+    });
 
 // --- Estados ---
 abstract class InventoryListState {}

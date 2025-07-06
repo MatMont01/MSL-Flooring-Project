@@ -1,3 +1,5 @@
+// lib/features/inventory/data/datasources/inventory_remote_data_source.dart
+
 import '../../../../core/api/api_client.dart';
 import '../../../../core/constants/api_constants.dart';
 import '../models/inventory_item_model.dart';
@@ -24,21 +26,55 @@ class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
 
   @override
   Future<List<InventoryItemModel>> getAllItems() async {
-    final response = await _apiClient.get(
-      ApiConstants.inventoryServiceBaseUrl,
-      '',
-    );
-    final List<dynamic> itemListJson = response;
-    return itemListJson
-        .map((json) => InventoryItemModel.fromJson(json))
-        .toList();
+    print('🔍 [InventoryDataSource] Fetching all inventory items...');
+
+    try {
+      // Obtener materiales y herramientas en paralelo
+      final results = await Future.wait([
+        _apiClient.get(ApiConstants.inventoryServiceBaseUrl, '/materials'),
+        _apiClient.get(ApiConstants.inventoryServiceBaseUrl, '/tools'),
+      ]);
+
+      final materialsJson = results[0] as List<dynamic>;
+      final toolsJson = results[1] as List<dynamic>;
+
+      print(
+        '🔍 [InventoryDataSource] Materials: ${materialsJson.length}, Tools: ${toolsJson.length}',
+      );
+
+      // Convertir materiales
+      final materials = materialsJson.map((json) {
+        final Map<String, dynamic> materialMap = Map<String, dynamic>.from(
+          json,
+        );
+        materialMap['category'] = 'Material';
+        return InventoryItemModel.fromJson(materialMap);
+      }).toList();
+
+      // Convertir herramientas
+      final tools = toolsJson.map((json) {
+        final Map<String, dynamic> toolMap = Map<String, dynamic>.from(json);
+        toolMap['category'] = 'Herramienta';
+        toolMap['unitPrice'] =
+            0.0; // Las herramientas no tienen precio en el backend
+        return InventoryItemModel.fromJson(toolMap);
+      }).toList();
+
+      final allItems = [...materials, ...tools];
+      print('🔍 [InventoryDataSource] Total items: ${allItems.length}');
+
+      return allItems;
+    } catch (e) {
+      print('🔴 [InventoryDataSource] Error: $e');
+      rethrow;
+    }
   }
 
   @override
   Future<List<InventoryItemModel>> getItemsByProject(String projectId) async {
     final response = await _apiClient.get(
       ApiConstants.inventoryServiceBaseUrl,
-      '/project/$projectId',
+      '/inventory-movements/project/$projectId',
     );
     final List<dynamic> itemListJson = response;
     return itemListJson
@@ -50,7 +86,7 @@ class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
   Future<InventoryItemModel> getItemById(String itemId) async {
     final response = await _apiClient.get(
       ApiConstants.inventoryServiceBaseUrl,
-      '/$itemId',
+      '/materials/$itemId',
     );
     return InventoryItemModel.fromJson(response);
   }
@@ -59,7 +95,7 @@ class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
   Future<InventoryItemModel> createItem(InventoryItemModel item) async {
     final response = await _apiClient.post(
       ApiConstants.inventoryServiceBaseUrl,
-      '',
+      '/materials',
       item.toJson(),
     );
     return InventoryItemModel.fromJson(response);
@@ -69,7 +105,7 @@ class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
   Future<InventoryItemModel> updateItem(InventoryItemModel item) async {
     final response = await _apiClient.put(
       ApiConstants.inventoryServiceBaseUrl,
-      '/${item.id}',
+      '/materials/${item.id}',
       item.toJson(),
     );
     return InventoryItemModel.fromJson(response);
@@ -77,6 +113,9 @@ class InventoryRemoteDataSourceImpl implements InventoryRemoteDataSource {
 
   @override
   Future<void> deleteItem(String itemId) async {
-    await _apiClient.delete(ApiConstants.inventoryServiceBaseUrl, '/$itemId');
+    await _apiClient.delete(
+      ApiConstants.inventoryServiceBaseUrl,
+      '/materials/$itemId',
+    );
   }
 }

@@ -5,8 +5,36 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7c613b48-d833-47dd-9969-8fa4b2c20034" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/create_material_providers.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/create_tool_providers.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/create_tool_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/widgets/worker_attendance_widget.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authService/src/main/java/com/MSLFlooringLLC/authService/controllers/AuthController.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/MSLFlooringLLC/authService/controllers/AuthController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authService/src/main/java/com/MSLFlooringLLC/authService/dto/JwtResponse.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/MSLFlooringLLC/authService/dto/JwtResponse.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authService/src/main/java/com/MSLFlooringLLC/authService/service/AuthServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/authService/src/main/java/com/MSLFlooringLLC/authService/service/AuthServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/android/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/common_widgets/home_shell.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/common_widgets/home_shell.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/common_widgets/session_handler.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/common_widgets/session_handler.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/navigation/app_router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/navigation/app_router.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/navigation/app_routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/navigation/app_routes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/providers/session_provider.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/providers/session_provider.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/auth/data/models/jwt_response_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/auth/data/models/jwt_response_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/auth/presentation/providers/auth_providers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/auth/presentation/providers/auth_providers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/auth/presentation/screens/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/auth/presentation/screens/login_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/datasources/inventory_remote_data_source.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/datasources/inventory_remote_data_source.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/models/inventory_item_model.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/models/inventory_item_model.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/repositories/inventory_repository_impl.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/repositories/inventory_repository_impl.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/entities/inventory_item_entity.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/entities/inventory_item_entity.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/repositories/inventory_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/repositories/inventory_repository.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/inventory_providers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/inventory_providers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/create_material_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/create_material_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/inventory_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/inventory_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/providers/project_providers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/providers/project_providers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/screens/project_details_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/screens/project_details_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/screens/project_list_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/screens/project_list_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/widgets/assign_worker_dialog.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/projects/presentation/widgets/assign_worker_dialog.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/main.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/main.dart" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -65,7 +93,7 @@
       <option name="presentableId" value="Default" />
       <updated>1751518229631</updated>
       <workItem from="1751518231248" duration="2000" />
-      <workItem from="1751800063592" duration="4524000" />
+      <workItem from="1751800063592" duration="16389000" />
     </task>
     <servers />
   </component>

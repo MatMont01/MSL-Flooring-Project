@@ -1,4 +1,5 @@
 // lib/features/inventory/domain/entities/inventory_item_entity.dart
+
 class InventoryItemEntity {
   final String id;
   final String name;

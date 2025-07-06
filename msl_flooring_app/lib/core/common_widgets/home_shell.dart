@@ -5,31 +5,58 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:msl_flooring_app/core/providers/session_provider.dart';
 
-// 1. Lo convertimos en un ConsumerWidget para que pueda observar providers.
 class HomeShell extends ConsumerWidget {
   const HomeShell({required this.navigationShell, super.key});
 
   final StatefulNavigationShell navigationShell;
 
   void _onTap(BuildContext context, int index) {
+    print('🔥 [HomeShell] Tab tapped: $index');
+    print('🔥 [HomeShell] Current index: ${navigationShell.currentIndex}');
+
+    // Debug: imprimir qué pestaña se está tocando
+    switch (index) {
+      case 0:
+        print('🔥 [HomeShell] Navigating to Proyectos');
+        break;
+      case 1:
+        print('🔥 [HomeShell] Navigating to Inventario');
+        break;
+      case 2:
+        print('🔥 [HomeShell] Navigating to Trabajadores');
+        break;
+      case 3:
+        print('🔥 [HomeShell] Navigating to Comunicaciones');
+        break;
+      case 4:
+        print('🔥 [HomeShell] Navigating to Analíticas');
+        break;
+    }
+
     navigationShell.goBranch(
       index,
       initialLocation: index == navigationShell.currentIndex,
     );
+
+    print('🔥 [HomeShell] Navigation completed to index: $index');
   }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // 2. OBSERVAMOS LA SESIÓN AQUÍ, EN EL WIDGET PADRE.
+    print('🔥 [HomeShell] build() called');
+
     final session = ref.watch(sessionProvider);
 
-    // 3. SI LA SESIÓN NO ESTÁ LISTA, MOSTRAMOS UNA PANTALLA DE CARGA.
-    // Esto previene que cualquiera de las pestañas se construya prematuramente.
     if (session == null) {
+      print('🔥 [HomeShell] Session is null, showing loading');
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
 
-    // 4. Si llegamos aquí, la sesión está lista. Construimos la UI normal.
+    print('🔥 [HomeShell] Session found for user: ${session.username}');
+    print(
+      '🔥 [HomeShell] Building HomeShell with current index: ${navigationShell.currentIndex}',
+    );
+
     return Scaffold(
       body: navigationShell,
       bottomNavigationBar: BottomNavigationBar(

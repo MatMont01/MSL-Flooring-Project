@@ -1,3 +1,5 @@
+// authService/src/main/java/com/MSLFlooringLLC/authService/controllers/AuthController.java
+
 package com.MSLFlooringLLC.authService.controllers;
 
 import com.MSLFlooringLLC.authService.domain.Role;
@@ -32,7 +34,6 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<UserResponse> register(@Valid @RequestBody RegisterRequest request) {
         User registeredUser = authService.register(request);
-        // Devolvemos el usuario creado con un código de estado 201
         return new ResponseEntity<>(UserResponse.fromEntity(registeredUser), HttpStatus.CREATED);
     }
 
@@ -58,6 +59,4 @@ public class AuthController {
         response.put("userId", user.getId().toString());
         return ResponseEntity.ok(response);
     }
-
-
 }
