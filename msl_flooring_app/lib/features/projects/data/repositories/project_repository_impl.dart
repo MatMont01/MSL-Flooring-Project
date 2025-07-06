@@ -61,4 +61,51 @@ class ProjectRepositoryImpl implements ProjectRepository {
       );
     }
   }
+
+  @override
+  Future<ProjectEntity> getProjectById(String projectId) async {
+    try {
+      return await remoteDataSource.getProjectById(projectId);
+    } on Failure catch (e) {
+      throw e;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al obtener los detalles del proyecto.',
+      );
+    }
+  }
+
+  // --- IMPLEMENTACIÓN DEL NUEVO MÉTODO ---
+  @override
+  Future<List<String>> getWorkerIdsByProject(String projectId) async {
+    try {
+      return await remoteDataSource.getWorkerIdsByProject(projectId);
+    } on Failure catch (e) {
+      throw e;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al obtener los trabajadores del proyecto.',
+      );
+    }
+  }
+
+  @override
+  Future<void> assignWorkerToProject({
+    required String projectId,
+    required String workerId,
+  }) async {
+    try {
+      final requestModel = WorkerAssignmentRequestModel(
+        projectId: projectId,
+        workerId: workerId,
+      );
+      await remoteDataSource.assignWorkerToProject(requestModel);
+    } on Failure catch (e) {
+      throw e;
+    } catch (e) {
+      throw const ServerFailure(
+        'Ocurrió un error inesperado al asignar el trabajador.',
+      );
+    }
+  }
 }

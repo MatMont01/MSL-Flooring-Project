@@ -12,4 +12,14 @@ abstract class ProjectRepository {
   // Contrato para crear un nuevo proyecto.
   // Devuelve el proyecto creado.
   Future<ProjectEntity> createProject(ProjectRequestEntity project);
+
+  Future<ProjectEntity> getProjectById(String projectId);
+
+  Future<List<String>> getWorkerIdsByProject(String projectId);
+
+  // Asigna un trabajador a un proyecto. No devuelve nada si tiene éxito.
+  Future<void> assignWorkerToProject({
+    required String projectId,
+    required String workerId,
+  });
 }

@@ -95,6 +95,13 @@ public class WorkerServiceImpl implements WorkerService {
                 .collect(Collectors.toList());
     }
 
+    @Override
+    public List<WorkerResponse> getWorkersByIds(List<UUID> workerIds) {
+        return workerRepository.findAllById(workerIds).stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
+    }
+
     private WorkerResponse toResponse(Worker worker) {
         return WorkerResponse.builder()
                 .id(worker.getId())

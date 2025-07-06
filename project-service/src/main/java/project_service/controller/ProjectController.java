@@ -46,9 +46,19 @@ public class ProjectController {
     }
 
     @PostMapping("/assign-worker")
+    @PreAuthorize("hasRole('ADMINISTRADOR')") // <-- AÑADE ESTA LÍNEA
     public ResponseEntity<Void> assignWorkerToProject(@RequestBody WorkerAssignmentRequest request) {
         projectService.assignWorkerToProject(request);
         return ResponseEntity.ok().build();
+    }
+
+    @GetMapping("/{projectId}")
+    // Aseguramos que solo usuarios autenticados puedan ver los detalles.
+    // Podrías hacerlo más específico si fuera necesario, ej. "hasAnyRole('ADMINISTRADOR', 'TRABAJADOR')"
+    @PreAuthorize("isAuthenticated()")
+    public ResponseEntity<ProjectResponse> getProjectById(@PathVariable UUID projectId) {
+        ProjectResponse project = projectService.getProjectById(projectId);
+        return ResponseEntity.ok(project);
     }
 
     @GetMapping("/{projectId}/workers")
@@ -65,4 +75,5 @@ public class ProjectController {
         projectService.removeWorkerFromProject(projectId, workerId);
         return ResponseEntity.noContent().build();
     }
+
 }

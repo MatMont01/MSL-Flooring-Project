@@ -1,10 +1,7 @@
 package com.example.worker_service.controller;
 
 import com.example.worker_service.domain.Worker;
-import com.example.worker_service.dto.AttendanceRecordRequest;
-import com.example.worker_service.dto.AttendanceRecordResponse;
-import com.example.worker_service.dto.WorkerRequest;
-import com.example.worker_service.dto.WorkerResponse;
+import com.example.worker_service.dto.*;
 import com.example.worker_service.service.WorkerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -68,5 +65,15 @@ public class WorkerController {
     @GetMapping("/project/{projectId}/attendance")
     public ResponseEntity<List<AttendanceRecordResponse>> getAttendanceByProject(@PathVariable UUID projectId) {
         return ResponseEntity.ok(workerService.getAttendanceByProject(projectId));
+    }
+
+    // --- ENDPOINT MODIFICADO ---
+    @PostMapping("/batch")
+    @PreAuthorize("isAuthenticated()")
+    // Cambiamos el @RequestBody para que espere nuestro nuevo DTO
+    public ResponseEntity<List<WorkerResponse>> getWorkersByIds(@RequestBody WorkerIdsRequest request) {
+        // Accedemos a la lista a través del getter del DTO
+        List<WorkerResponse> workers = workerService.getWorkersByIds(request.getWorkerIds());
+        return ResponseEntity.ok(workers);
     }
 }

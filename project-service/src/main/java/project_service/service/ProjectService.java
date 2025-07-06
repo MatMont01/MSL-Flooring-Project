@@ -20,4 +20,7 @@ public interface ProjectService {
 
     List<ProjectResponse> getProjectsForWorker(UUID workerId);
 
+    // --- AÑADE ESTE NUEVO MÉTODO ---
+    ProjectResponse getProjectById(UUID projectId);
+
 }

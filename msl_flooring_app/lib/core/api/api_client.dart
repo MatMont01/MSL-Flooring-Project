@@ -46,15 +46,13 @@ class ApiClient {
     }
   }
 
-  Future<dynamic> post(
-    String baseUrl,
-    String endpoint,
-    Map<String, dynamic> body,
-  ) async {
+  Future<dynamic> post(String baseUrl, String endpoint, dynamic body) async {
+    // Acepta 'dynamic'
     final Uri uri = Uri.parse('$baseUrl$endpoint');
     print('[ApiClient] Making POST request to: $uri');
 
     try {
+      // jsonEncode puede manejar tanto Mapas como Listas
       final response = await _client.post(
         uri,
         headers: _getHeaders(),

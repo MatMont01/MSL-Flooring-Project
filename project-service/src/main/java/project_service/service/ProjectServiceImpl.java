@@ -78,6 +78,17 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public ProjectResponse getProjectById(UUID projectId) {
+        // 1. Busca el proyecto en la base de datos por su ID.
+        // 2. Si no lo encuentra, lanza una excepción (puedes personalizarla).
+        Project project = projectRepository.findById(projectId)
+                .orElseThrow(() -> new RuntimeException("Proyecto no encontrado con ID: " + projectId));
+
+        // 3. Convierte la entidad Project a un DTO ProjectResponse y lo devuelve.
+        return toResponse(project);
+    }
+
+    @Override
     public List<ProjectResponse> getProjectsForWorker(UUID workerId) {
         // 1. Encuentra todas las asignaciones para un trabajador específico.
         List<ProjectWorker> assignments = projectWorkerRepository.findByWorkerId(workerId);

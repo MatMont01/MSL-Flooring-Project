@@ -12,6 +12,12 @@ abstract class ProjectRemoteDataSource {
   Future<List<ProjectModel>> getAssignedProjects();
 
   Future<ProjectModel> createProject(ProjectRequestModel project);
+
+  Future<ProjectModel> getProjectById(String projectId);
+
+  Future<List<String>> getWorkerIdsByProject(String projectId);
+
+  Future<void> assignWorkerToProject(WorkerAssignmentRequestModel request);
 }
 
 class ProjectRemoteDataSourceImpl implements ProjectRemoteDataSource {
@@ -58,5 +64,47 @@ class ProjectRemoteDataSourceImpl implements ProjectRemoteDataSource {
 
     // La API devuelve el proyecto recién creado como un solo objeto JSON
     return ProjectModel.fromJson(response);
+  }
+
+  @override
+  Future<ProjectModel> getProjectById(String projectId) async {
+    final endpoint = '/$projectId';
+    final url = '${ApiConstants.projectServiceBaseUrl}$endpoint';
+    print('[ProjectDataSource] Calling GET $url');
+    final response = await _apiClient.get(
+      ApiConstants.projectServiceBaseUrl,
+      endpoint,
+    );
+    return ProjectModel.fromJson(response);
+  }
+
+  // --- IMPLEMENTACIÓN DEL NUEVO MÉTODO ---
+  @override
+  Future<List<String>> getWorkerIdsByProject(String projectId) async {
+    // Construimos el endpoint, ej: /projects/123-abc/workers
+    final endpoint = '/$projectId/workers';
+    final url = '${ApiConstants.projectServiceBaseUrl}$endpoint';
+    print('[ProjectDataSource] Calling GET $url');
+
+    final response = await _apiClient.get(
+      ApiConstants.projectServiceBaseUrl,
+      endpoint,
+    );
+
+    // La API devuelve una lista de UUIDs en formato String.
+    // La respuesta (response) ya es una List<dynamic>, la convertimos a List<String>.
+    final List<String> workerIds = List<String>.from(response);
+    return workerIds;
+  }
+
+  @override
+  Future<void> assignWorkerToProject(
+    WorkerAssignmentRequestModel request,
+  ) async {
+    await _apiClient.post(
+      ApiConstants.projectServiceBaseUrl,
+      '/assign-worker', // El endpoint de asignación
+      request.toJson(), // El cuerpo de la petición
+    );
   }
 }

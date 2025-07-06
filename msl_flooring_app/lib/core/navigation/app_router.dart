@@ -12,6 +12,7 @@ import '../../features/notifications/presentation/screens/notification_screen.da
 import '../../features/projects/presentation/screens/create_project_screen.dart';
 // Importaremos la pantalla de detalles que crearemos después
 
+import '../../features/projects/presentation/screens/project_details_screen.dart';
 import '../../features/projects/presentation/screens/project_list_screen.dart';
 import '../../features/worker/presentation/screens/worker_list_screen.dart';
 import 'app_routes.dart';
@@ -19,7 +20,7 @@ import 'app_routes.dart';
 // --- Router Configuration ---
 class AppRouter {
   static final GlobalKey<NavigatorState> _rootNavigatorKey =
-  GlobalKey<NavigatorState>();
+      GlobalKey<NavigatorState>();
 
   static final GoRouter router = GoRouter(
     navigatorKey: _rootNavigatorKey,

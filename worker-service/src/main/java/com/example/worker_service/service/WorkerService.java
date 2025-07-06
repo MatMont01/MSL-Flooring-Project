@@ -23,4 +23,6 @@ public interface WorkerService {
     List<AttendanceRecordResponse> getAttendanceByWorker(UUID workerId);
 
     List<AttendanceRecordResponse> getAttendanceByProject(UUID projectId);
+
+    List<WorkerResponse> getWorkersByIds(List<UUID> workerIds);
 }

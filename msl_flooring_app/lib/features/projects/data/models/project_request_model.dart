@@ -29,3 +29,18 @@ class ProjectRequestModel extends ProjectRequestEntity {
     };
   }
 }
+
+class WorkerAssignmentRequestModel {
+  final String projectId;
+  final String workerId;
+
+  const WorkerAssignmentRequestModel({
+    required this.projectId,
+    required this.workerId,
+  });
+
+  // Método para convertir el objeto a un mapa que será el cuerpo JSON.
+  Map<String, dynamic> toJson() {
+    return {'projectId': projectId, 'workerId': workerId};
+  }
+}
