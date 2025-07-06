@@ -51,10 +51,11 @@ public class AuthController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
         }
 
-        User user = authService.getUserFromToken(token); // nuevo método
+        User user = authService.getUserFromToken(token);
         Map<String, Object> response = new HashMap<>();
         response.put("username", user.getUsername());
         response.put("roles", user.getRoles().stream().map(Role::getName).toList());
+        response.put("userId", user.getId().toString());
         return ResponseEntity.ok(response);
     }
 

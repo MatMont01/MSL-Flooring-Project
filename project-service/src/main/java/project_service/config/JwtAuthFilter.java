@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 @Component
 @RequiredArgsConstructor
@@ -41,6 +42,10 @@ public class JwtAuthFilter extends OncePerRequestFilter {
             Map<String, Object> userInfo = authClient.getUserInfo(token);
 
             String username = (String) userInfo.get("username");
+            // Extraemos el userId que ahora viene en la respuesta de validación
+            String userIdStr = (String) userInfo.get("userId");
+            UUID userId = UUID.fromString(userIdStr);
+
             @SuppressWarnings("unchecked")
             var roles = (List<String>) userInfo.get("roles");
 
@@ -54,16 +59,17 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                     null,
                     authorities
             );
-            authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+
+            // Guardamos el userId en los detalles de la autenticación
+            authentication.setDetails(userId);
+
             SecurityContextHolder.getContext().setAuthentication(authentication);
 
         } catch (Exception e) {
             System.err.println("🔒 Error al validar token con auth-service: " + e.getMessage());
-            e.printStackTrace();
             SecurityContextHolder.clearContext();
         }
 
         filterChain.doFilter(request, response);
     }
-
 }

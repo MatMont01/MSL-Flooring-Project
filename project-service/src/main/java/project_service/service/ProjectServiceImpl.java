@@ -78,6 +78,22 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     @Override
+    public List<ProjectResponse> getProjectsForWorker(UUID workerId) {
+        // 1. Encuentra todas las asignaciones para un trabajador específico.
+        List<ProjectWorker> assignments = projectWorkerRepository.findByWorkerId(workerId);
+
+        // 2. Extrae los IDs de los proyectos de esas asignaciones.
+        List<UUID> projectIds = assignments.stream()
+                .map(ProjectWorker::getProjectId)
+                .collect(Collectors.toList());
+
+        // 3. Busca todos los proyectos que coincidan con esos IDs.
+        return projectRepository.findAllById(projectIds).stream()
+                .map(this::toResponse) // Convierte cada Project a ProjectResponse
+                .collect(Collectors.toList());
+    }
+
+    @Override
     public List<UUID> getWorkerIdsByProject(UUID projectId) {
         return projectWorkerRepository.findByProjectId(projectId).stream()
                 .map(ProjectWorker::getWorkerId)

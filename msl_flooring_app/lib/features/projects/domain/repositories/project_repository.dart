@@ -1,10 +1,15 @@
 // lib/features/projects/domain/repositories/project_repository.dart
 
 import '../entities/project_entity.dart';
+import '../entities/project_request_entity.dart'; // Importa la nueva entidad
 
 abstract class ProjectRepository {
-  // Contrato para obtener una lista de todos los proyectos.
-  // La implementación de este método en la capa de datos se encargará
-  // de manejar cualquier posible error de red o del servidor.
   Future<List<ProjectEntity>> getAllProjects();
+
+  Future<List<ProjectEntity>> getAssignedProjects();
+
+  // --- AÑADE ESTE NUEVO MÉTODO ---
+  // Contrato para crear un nuevo proyecto.
+  // Devuelve el proyecto creado.
+  Future<ProjectEntity> createProject(ProjectRequestEntity project);
 }

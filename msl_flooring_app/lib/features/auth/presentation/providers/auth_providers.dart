@@ -5,37 +5,38 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/api/api_client.dart';
+import '../../../../core/providers/session_provider.dart';
 import '../../data/datasources/auth_remote_data_source.dart';
 import '../../data/repositories/auth_repository_impl.dart';
+import '../../domain/entities/session_entity.dart';
 import '../../domain/repositories/auth_repository.dart';
 
-// --- Providers para la infraestructura de datos ---
+// --- Providers para la infraestructura de datos (VERSIÓN CORREGIDA) ---
 
-// 1. Provider para SharedPreferences (lo usaremos para el token)
-final sharedPreferencesProvider = FutureProvider<SharedPreferences>((
-  ref,
-) async {
-  return await SharedPreferences.getInstance();
-});
+// 1. Provider para SharedPreferences (se mantiene igual, es la fuente del Future)
+final sharedPreferencesProvider = FutureProvider<SharedPreferences>(
+  (ref) => SharedPreferences.getInstance(),
+);
 
-// 2. Provider para nuestro ApiClient (versión corregida y única)
+// 2. Provider para nuestro ApiClient. Ahora también depende del Future.
 final apiClientProvider = Provider<ApiClient>((ref) {
-  // Obtenemos SharedPreferences de forma segura
-  final sharedPreferences = ref.watch(sharedPreferencesProvider).asData!.value;
+  // Aquí usamos .requireValue para asegurarnos de que solo se construya
+  // cuando SharedPreferences esté listo. Esto se maneja en la UI.
+  final sharedPreferences = ref.watch(sharedPreferencesProvider).requireValue;
   return ApiClient(sharedPreferences: sharedPreferences, client: http.Client());
 });
 
 // 3. Provider para el AuthRemoteDataSource
 final authRemoteDataSourceProvider = Provider<AuthRemoteDataSource>((ref) {
   final apiClient = ref.watch(apiClientProvider);
-  final sharedPreferences = ref.watch(sharedPreferencesProvider).asData!.value;
+  final sharedPreferences = ref.watch(sharedPreferencesProvider).requireValue;
   return AuthRemoteDataSourceImpl(
     apiClient: apiClient,
     sharedPreferences: sharedPreferences,
   );
 });
 
-// 4. Provider para el AuthRepository (el que usará nuestra UI)
+// 4. Provider para el AuthRepository
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   final remoteDataSource = ref.watch(authRemoteDataSourceProvider);
   return AuthRepositoryImpl(remoteDataSource: remoteDataSource);
@@ -43,24 +44,26 @@ final authRepositoryProvider = Provider<AuthRepository>((ref) {
 
 // --- Provider para la lógica de negocio (Notifier) ---
 
-// 5. Provider del Notifier que manejará el estado de la autenticación
+// 5. Provider del Notifier (se mantiene igual)
 final authNotifierProvider = StateNotifierProvider<AuthNotifier, AuthState>((
   ref,
 ) {
   final authRepository = ref.watch(authRepositoryProvider);
-  return AuthNotifier(authRepository);
+  return AuthNotifier(authRepository, ref);
 });
 
-// --- Clases de Estado ---
-
-// 6. Definimos los posibles estados de nuestra pantalla de login
+// --- Clases de Estado (se mantienen igual) ---
 abstract class AuthState {}
 
 class AuthInitial extends AuthState {}
 
 class AuthLoading extends AuthState {}
 
-class AuthSuccess extends AuthState {}
+class AuthSuccess extends AuthState {
+  final SessionEntity session;
+
+  AuthSuccess(this.session);
+}
 
 class AuthFailure extends AuthState {
   final String message;
@@ -68,21 +71,24 @@ class AuthFailure extends AuthState {
   AuthFailure(this.message);
 }
 
-// --- El Notifier ---
-
-// 7. Esta es la clase que contiene la lógica para llamar al repositorio
+// --- El Notifier (se mantiene igual) ---
 class AuthNotifier extends StateNotifier<AuthState> {
   final AuthRepository _authRepository;
+  final Ref _ref;
 
-  AuthNotifier(this._authRepository) : super(AuthInitial());
+  AuthNotifier(this._authRepository, this._ref) : super(AuthInitial());
 
   Future<void> login(String username, String password) async {
     try {
-      state = AuthLoading(); // Cambiamos el estado a "cargando"
-      await _authRepository.login(username: username, password: password);
-      state = AuthSuccess(); // Si todo sale bien, estado de "éxito"
+      state = AuthLoading();
+      final session = await _authRepository.login(
+        username: username,
+        password: password,
+      );
+      _ref.read(sessionProvider.notifier).setSession(session);
+      state = AuthSuccess(session);
     } catch (e) {
-      state = AuthFailure(e.toString()); // Si hay un error, estado de "falla"
+      state = AuthFailure(e.toString());
     }
   }
 }

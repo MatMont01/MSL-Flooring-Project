@@ -30,6 +30,7 @@ public class JwtUtils {
         return Jwts.builder()
                 .setSubject(user.getUsername())
                 .claim("roles", user.getRoles().stream().map(r -> r.getName()).toList())
+                .claim("userId", user.getId()) // <-- AÑADE ESTA LÍNEA
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + jwtExpirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS512)

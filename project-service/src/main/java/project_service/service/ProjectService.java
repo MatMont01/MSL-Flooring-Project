@@ -18,4 +18,6 @@ public interface ProjectService {
 
     void removeWorkerFromProject(UUID projectId, UUID workerId);
 
+    List<ProjectResponse> getProjectsForWorker(UUID workerId);
+
 }

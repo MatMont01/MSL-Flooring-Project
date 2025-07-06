@@ -2,6 +2,8 @@ package project_service.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 import project_service.dto.ProjectRequest;
 import project_service.dto.ProjectResponse;
@@ -25,8 +27,21 @@ public class ProjectController {
     }
 
     @GetMapping
+    @PreAuthorize("hasRole('ADMINISTRADOR')")
     public ResponseEntity<List<ProjectResponse>> getAllProjects() {
         List<ProjectResponse> projects = projectService.getAllProjects();
+        return ResponseEntity.ok(projects);
+    }
+
+    @GetMapping("/my-assigned")
+    @PreAuthorize("hasRole('TRABAJADOR')")
+    public ResponseEntity<List<ProjectResponse>> getMyAssignedProjects(Authentication authentication) {
+        // 1. Obtenemos el userId que guardamos en el JwtAuthFilter
+        UUID workerId = (UUID) authentication.getDetails();
+
+        // 2. Llamamos al servicio con el ID del trabajador autenticado
+        List<ProjectResponse> projects = projectService.getProjectsForWorker(workerId);
+
         return ResponseEntity.ok(projects);
     }
 
@@ -50,5 +65,4 @@ public class ProjectController {
         projectService.removeWorkerFromProject(projectId, workerId);
         return ResponseEntity.noContent().build();
     }
-
 }

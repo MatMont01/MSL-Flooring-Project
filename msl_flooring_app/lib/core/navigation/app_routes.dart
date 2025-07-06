@@ -6,4 +6,7 @@ class AppRoutes {
       '/projects'; // Cambiemos /home a /projects para más claridad
   static const String projectDetails =
       '/projects/:id'; // Nueva ruta con parámetro
+
+  // --- AÑADE ESTA LÍNEA ---
+  static const String createProject = '/projects/create';
 }

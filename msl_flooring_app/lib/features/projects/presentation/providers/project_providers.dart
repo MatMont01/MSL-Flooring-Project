@@ -3,9 +3,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:msl_flooring_app/features/auth/presentation/providers/auth_providers.dart';
 
+import '../../../../core/providers/session_provider.dart';
 import '../../data/datasources/project_remote_data_source.dart';
 import '../../data/repositories/project_repository_impl.dart';
 import '../../domain/entities/project_entity.dart';
+import '../../domain/entities/project_request_entity.dart';
 import '../../domain/repositories/project_repository.dart';
 
 // --- Providers para la infraestructura de datos de Proyectos ---
@@ -31,8 +33,9 @@ final projectRepositoryProvider = Provider<ProjectRepository>((ref) {
 final projectListProvider =
     StateNotifierProvider<ProjectListNotifier, ProjectListState>((ref) {
       final projectRepository = ref.watch(projectRepositoryProvider);
-      // Creamos la instancia y llamamos al método para cargar los datos iniciales
-      return ProjectListNotifier(projectRepository)..fetchProjects();
+      // Le pasamos el 'ref' al notifier
+      // ¡HEMOS QUITADO LA LLAMADA "..fetchProjects()"!
+      return ProjectListNotifier(projectRepository, ref);
     });
 
 // --- Clases de Estado para la UI ---
@@ -59,18 +62,105 @@ class ProjectListFailure extends ProjectListState {
 // --- El Notifier ---
 
 // 5. La clase que contiene la lógica para obtener los datos y manejar el estado
+// --- El Notifier (MODIFICADO CON print()) ---
 class ProjectListNotifier extends StateNotifier<ProjectListState> {
   final ProjectRepository _projectRepository;
+  final Ref _ref;
 
-  ProjectListNotifier(this._projectRepository) : super(ProjectListInitial());
+  ProjectListNotifier(this._projectRepository, this._ref)
+    : super(ProjectListInitial());
 
   Future<void> fetchProjects() async {
+    // Usamos print() para asegurar la visibilidad
+    print('[ProjectNotifier] Fetching projects...');
+
     try {
       state = ProjectListLoading();
-      final projects = await _projectRepository.getAllProjects();
+      print('[ProjectNotifier] State set to Loading.');
+
+      final session = _ref.read(sessionProvider);
+      if (session == null) {
+        throw Exception(
+          'Error: No hay sesión activa. No se pueden buscar proyectos.',
+        );
+      }
+
+      final bool isAdmin = session.isAdmin;
+      print('[ProjectNotifier] User is admin: $isAdmin');
+
+      List<ProjectEntity> projects;
+
+      if (isAdmin) {
+        print('[ProjectNotifier] Calling getAllProjects() for admin.');
+        projects = await _projectRepository.getAllProjects();
+      } else {
+        print('[ProjectNotifier] Calling getAssignedProjects() for worker.');
+        projects = await _projectRepository.getAssignedProjects();
+      }
+
+      print(
+        '[ProjectNotifier] Successfully fetched ${projects.length} projects.',
+      );
       state = ProjectListSuccess(projects);
-    } catch (e) {
+      print('[ProjectNotifier] State set to Success.');
+    } catch (e, s) {
+      // Capturamos el error (e) y el StackTrace (s)
+
+      // ¡ESTE ES EL PRINT MÁS IMPORTANTE!
+      print('======================================================');
+      print('!!! ERROR en ProjectNotifier.fetchProjects !!!');
+      print('Error: $e');
+      print('StackTrace: \n$s');
+      print('======================================================');
+
       state = ProjectListFailure(e.toString());
+      print('[ProjectNotifier] State set to Failure.');
     }
   }
 }
+// --- Providers y Lógica para la Creación de Proyectos ---
+
+// 1. Definimos los estados para el proceso de creación.
+abstract class CreateProjectState {}
+
+class CreateProjectInitial extends CreateProjectState {}
+
+class CreateProjectLoading extends CreateProjectState {}
+
+class CreateProjectSuccess extends CreateProjectState {
+  final ProjectEntity newProject;
+
+  CreateProjectSuccess(this.newProject);
+}
+
+class CreateProjectFailure extends CreateProjectState {
+  final String message;
+
+  CreateProjectFailure(this.message);
+}
+
+// 2. Creamos el Notifier que manejará la lógica de creación.
+class CreateProjectNotifier extends StateNotifier<CreateProjectState> {
+  final ProjectRepository _projectRepository;
+
+  CreateProjectNotifier(this._projectRepository)
+    : super(CreateProjectInitial());
+
+  Future<void> createProject(ProjectRequestEntity project) async {
+    try {
+      state = CreateProjectLoading();
+      final newProject = await _projectRepository.createProject(project);
+      state = CreateProjectSuccess(newProject);
+    } catch (e) {
+      state = CreateProjectFailure(e.toString());
+    }
+  }
+}
+
+// 3. Creamos el Provider para nuestro nuevo Notifier.
+final createProjectProvider =
+    StateNotifierProvider<CreateProjectNotifier, CreateProjectState>((ref) {
+      // Reutilizamos el repositorio que ya teníamos.
+      final projectRepository = ref.watch(projectRepositoryProvider);
+      return CreateProjectNotifier(projectRepository);
+    });

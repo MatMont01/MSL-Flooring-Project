@@ -1,9 +1,9 @@
-// lib/features/1_auth/data/repositories/auth_repository_impl.dart
+// lib/features/auth/data/repositories/auth_repository_impl.dart
 
+import '../../domain/entities/session_entity.dart'; // Importar
 import '../../domain/repositories/auth_repository.dart';
-
-import '../../../../core/error/failure.dart';
 import '../datasources/auth_remote_data_source.dart';
+import '../../../../core/error/failure.dart';
 
 class AuthRepositoryImpl implements AuthRepository {
   final AuthRemoteDataSource remoteDataSource;
@@ -11,20 +11,27 @@ class AuthRepositoryImpl implements AuthRepository {
   AuthRepositoryImpl({required this.remoteDataSource});
 
   @override
-  Future<void> login({
+  Future<SessionEntity> login({
     required String username,
     required String password,
   }) async {
     try {
-      await remoteDataSource.login(username, password);
-    } on Failure {
-      rethrow; // Lanza la misma falla para que la capa de presentación la maneje.
+      // 1. Llama al datasource, que devuelve el modelo con toda la info
+      final jwtResponse = await remoteDataSource.login(username, password);
+
+      // 2. Construye y devuelve la SessionEntity
+      return SessionEntity(
+        username: jwtResponse.username,
+        roles: jwtResponse.roles,
+      );
+    } on Failure catch (e) {
+      throw e;
     } catch (e) {
-      // Para cualquier otro error inesperado.
       throw const ServerFailure('Ocurrió un error inesperado.');
     }
   }
 
+  // El resto de los métodos se mantienen igual
   @override
   Future<void> register({
     required String username,
@@ -33,8 +40,8 @@ class AuthRepositoryImpl implements AuthRepository {
   }) async {
     try {
       await remoteDataSource.register(username, email, password);
-    } on Failure {
-      rethrow;
+    } on Failure catch (e) {
+      throw e;
     } catch (e) {
       throw const ServerFailure('Ocurrió un error inesperado.');
     }
