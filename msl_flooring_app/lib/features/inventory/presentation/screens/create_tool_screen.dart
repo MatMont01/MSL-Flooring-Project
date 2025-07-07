@@ -47,6 +47,7 @@ class _CreateToolScreenState extends ConsumerState<CreateToolScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Herramienta "${next.toolName}" creada exitosamente'),
+            backgroundColor: Colors.green,
           ),
         );
         // Refrescar la lista de inventario
@@ -54,25 +55,33 @@ class _CreateToolScreenState extends ConsumerState<CreateToolScreen> {
         context.pop();
       }
       if (next is CreateToolFailure) {
-        ScaffoldMessenger.of(
-          context,
-        ).showSnackBar(SnackBar(content: Text('Error: ${next.message}')));
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error: ${next.message}'),
+            backgroundColor: Colors.red,
+          ),
+        );
       }
     });
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Crear Herramienta')),
+      appBar: AppBar(
+        title: const Text('Crear Nueva Herramienta'),
+        elevation: 0,
+        backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+        foregroundColor: Theme.of(context).textTheme.titleLarge?.color,
+      ),
       body: Form(
         key: _formKey,
-        child: Padding(
+        child: SingleChildScrollView(
           padding: const EdgeInsets.all(16.0),
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               TextFormField(
                 controller: _nameController,
                 decoration: const InputDecoration(
                   labelText: 'Nombre de la Herramienta',
-                  border: OutlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -84,10 +93,7 @@ class _CreateToolScreenState extends ConsumerState<CreateToolScreen> {
               const SizedBox(height: 16),
               TextFormField(
                 controller: _descriptionController,
-                decoration: const InputDecoration(
-                  labelText: 'Descripción',
-                  border: OutlineInputBorder(),
-                ),
+                decoration: const InputDecoration(labelText: 'Descripción'),
                 maxLines: 3,
                 validator: (value) {
                   if (value == null || value.isEmpty) {
@@ -97,16 +103,26 @@ class _CreateToolScreenState extends ConsumerState<CreateToolScreen> {
                 },
               ),
               const SizedBox(height: 32),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: createState is CreateToolLoading
-                      ? null
-                      : _submitForm,
-                  child: createState is CreateToolLoading
-                      ? const CircularProgressIndicator()
-                      : const Text('Crear Herramienta'),
+              ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  padding: const EdgeInsets.symmetric(vertical: 16),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8),
+                  ),
                 ),
+                onPressed: createState is CreateToolLoading
+                    ? null
+                    : _submitForm,
+                child: createState is CreateToolLoading
+                    ? const SizedBox(
+                        height: 20,
+                        width: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 3,
+                        ),
+                      )
+                    : const Text('Crear Herramienta'),
               ),
             ],
           ),

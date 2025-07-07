@@ -25,6 +25,64 @@ class ApiClient {
     };
   }
 
+  // 🔧 NUEVO MÉTODO PARA UPLOAD DE ARCHIVOS
+  Future<dynamic> uploadFile({
+    required String baseUrl,
+    required String endpoint,
+    required File file,
+    required String filename,
+    required Map<String, String> fields,
+    String fileFieldName = 'file',
+  }) async {
+    final Uri uri = Uri.parse('$baseUrl$endpoint');
+    print('[ApiClient] Making MULTIPART POST request to: $uri');
+
+    try {
+      // Crear multipart request
+      var request = http.MultipartRequest('POST', uri);
+
+      // 🔧 AÑADIR TOKEN DE AUTORIZACIÓN
+      final token = _sharedPreferences.getString(_authTokenKey);
+      if (token != null) {
+        request.headers['Authorization'] = 'Bearer $token';
+        print('[ApiClient] Token added to multipart request');
+      }
+
+      // Añadir campos del formulario
+      request.fields.addAll(fields);
+      print('[ApiClient] Added fields: ${fields.keys.join(', ')}');
+
+      // Añadir archivo
+      var fileStream = http.ByteStream(file.openRead());
+      var fileLength = await file.length();
+      var multipartFile = http.MultipartFile(
+        fileFieldName,
+        fileStream,
+        fileLength,
+        filename: filename,
+      );
+      request.files.add(multipartFile);
+      print('[ApiClient] Added file: $filename (${fileLength} bytes)');
+
+      // Enviar request
+      var streamedResponse = await request.send();
+      var response = await http.Response.fromStream(streamedResponse);
+
+      print('[ApiClient] Upload response status: ${response.statusCode}');
+      print('[ApiClient] Upload response body: ${response.body}');
+
+      return _handleResponse(response, uri.toString());
+    } on SocketException {
+      print('[ApiClient] Network Error: No connection for $uri');
+      throw const NetworkFailure(
+        'No se pudo conectar a la red. Revisa tu conexión a internet.',
+      );
+    } catch (e) {
+      print('[ApiClient] Upload Error for $uri: $e');
+      throw ServerFailure(e.toString());
+    }
+  }
+
   Future<dynamic> get(String baseUrl, String endpoint) async {
     final Uri uri = Uri.parse('$baseUrl$endpoint');
     print('[ApiClient] Making GET request to: $uri');
@@ -46,7 +104,7 @@ class ApiClient {
   Future<dynamic> post(String baseUrl, String endpoint, dynamic body) async {
     final Uri uri = Uri.parse('$baseUrl$endpoint');
     print('[ApiClient] Making POST request to: $uri');
-    print('[ApiClient] POST Body: ${jsonEncode(body)}'); // 🔧 LOG DEL BODY
+    print('[ApiClient] POST Body: ${jsonEncode(body)}');
 
     try {
       final response = await _client.post(
@@ -89,7 +147,6 @@ class ApiClient {
         );
       }
     } else {
-      // 🔧 MEJOR MANEJO DE ERRORES
       print('[ApiClient] Request failed with status ${response.statusCode}.');
 
       String errorMessage = 'Error del servidor: ${response.statusCode}';
@@ -103,7 +160,6 @@ class ApiClient {
           errorMessage = errorJson['error'];
         }
       } catch (e) {
-        // Si no se puede parsear, usar el mensaje genérico
         print('[ApiClient] Could not parse error response: $e');
       }
 

@@ -5,39 +5,53 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="7c613b48-d833-47dd-9969-8fa4b2c20034" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/datasources/material_remote_data_source.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/datasources/tool_assignment_remote_data_source.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/datasources/tool_remote_data_source.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/models/tool_request_model.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/repositories/material_repository_impl.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/entities/tool_request_entity.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/repositories/material_repository.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/repositories/tool_assignment_repository.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/repositories/tool_repository.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/assignment_list_providers.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/edit_material_providers.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/edit_tool_providers.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/material_assignment_providers.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/tool_assignment_providers.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/assign_tool_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/edit_material_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/edit_tool_screen.dart" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/view_assignments_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/android/app/src/main/res/xml/file_paths.xml" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/data/datasources/analytics_api_data_source.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/domain/entities/chart_data_entity.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/presentation/providers/enhanced_analytics_provider.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/presentation/screens/enhanced_analytics_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/presentation/widgets/chart_card.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/presentation/widgets/kpi_card.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/presentation/widgets/progress_chart.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/services/analytics_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/services/real_analytics_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/data/datasources/document_remote_data_source.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/data/models/document_model.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/data/models/document_permission_model.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/data/repositories/document_repository_impl.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/domain/entities/document_entity.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/domain/entities/document_permission_entity.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/domain/repositories/document_repository.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/domain/services/document_download_service.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/presentation/providers/document_download_provider.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/presentation/providers/document_upload_provider.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/presentation/screens/document_permissions_management_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/presentation/screens/document_permissions_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/presentation/screens/documents_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/presentation/screens/upload_document_screen.dart" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/documents/presentation/widgets/document_card.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/Dart_Packages.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/controller/MaterialController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/controller/MaterialController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/controller/ToolController.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/controller/ToolController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/service/MaterialService.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/service/MaterialService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/service/MaterialServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/service/MaterialServiceImpl.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/service/ToolService.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/service/ToolService.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/service/ToolServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/inventory-service/src/main/java/inventory_service/service/ToolServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/android/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/android/app/src/main/AndroidManifest.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/api/api_client.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/api/api_client.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/datasources/inventory_remote_data_source.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/datasources/inventory_remote_data_source.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/repositories/inventory_repository_impl.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/data/repositories/inventory_repository_impl.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/repositories/inventory_repository.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/domain/repositories/inventory_repository.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/create_tool_providers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/create_tool_providers.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/inventory_providers.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/providers/inventory_providers.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/common_widgets/home_shell.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/common_widgets/home_shell.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/navigation/app_router.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/navigation/app_router.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/core/navigation/app_routes.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/core/navigation/app_routes.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/presentation/screens/analytics_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/analytics/presentation/screens/analytics_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/auth/presentation/screens/login_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/auth/presentation/screens/login_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/assign_material_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/assign_material_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/assign_tool_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/assign_tool_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/create_material_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/create_material_screen.dart" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/create_tool_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/create_tool_screen.dart" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/inventory_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/inventory/presentation/screens/inventory_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/lib/features/notifications/presentation/screens/notification_screen.dart" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/lib/features/notifications/presentation/screens/notification_screen.dart" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/linux/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/linux/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/linux/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/linux/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/macos/Flutter/GeneratedPluginRegistrant.swift" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/macos/Flutter/GeneratedPluginRegistrant.swift" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/pubspec.lock" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/pubspec.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/pubspec.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/pubspec.yaml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/windows/flutter/generated_plugin_registrant.cc" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/windows/flutter/generated_plugin_registrant.cc" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/msl_flooring_app/windows/flutter/generated_plugins.cmake" beforeDir="false" afterPath="$PROJECT_DIR$/msl_flooring_app/windows/flutter/generated_plugins.cmake" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/notification-service/src/main/java/com/example/notification_service/controller/DocumentController.java" beforeDir="false" afterPath="$PROJECT_DIR$/notification-service/src/main/java/com/example/notification_service/controller/DocumentController.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,6 +91,11 @@
     "vue.rearranger.settings.migration": "true"
   }
 }]]></component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="C:\Users\eroni\IdeaProjects\MSL Flooring Project\msl_flooring_app\lib\features\documents\domain" />
+    </key>
+  </component>
   <component name="RunManager">
     <configuration name="Unnamed" type="FlutterRunConfigurationType" factoryName="Flutter" nameIsGenerated="true">
       <option name="filePath" value="$PROJECT_DIR$/msl_flooring_app/lib/main.dart" />
@@ -99,7 +118,7 @@
       <option name="presentableId" value="Default" />
       <updated>1751518229631</updated>
       <workItem from="1751518231248" duration="2000" />
-      <workItem from="1751800063592" duration="24000000" />
+      <workItem from="1751800063592" duration="38710000" />
     </task>
     <servers />
   </component>

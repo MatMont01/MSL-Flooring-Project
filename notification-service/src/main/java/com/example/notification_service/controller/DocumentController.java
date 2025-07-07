@@ -6,12 +6,14 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.net.URLConnection;
 import java.util.List;
 import java.util.UUID;
 
@@ -56,16 +58,29 @@ public class DocumentController {
 
     @GetMapping("/{id}/download")
     public ResponseEntity<Resource> downloadDocument(@PathVariable UUID id) {
-        DocumentResponse doc = documentService.getDocumentById(id);
-        FileSystemResource resource = new FileSystemResource(doc.getFileUrl());
+        try {
+            DocumentResponse doc = documentService.getDocumentById(id);
+            FileSystemResource resource = new FileSystemResource(doc.getFileUrl());
 
-        if (!resource.exists()) {
-            return ResponseEntity.notFound().build();
+            if (!resource.exists()) {
+                return ResponseEntity.notFound().build();
+            }
+
+            // Detectar tipo de contenido
+            String contentType = URLConnection.guessContentTypeFromName(doc.getFilename());
+            if (contentType == null) {
+                contentType = "application/octet-stream";
+            }
+
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION,
+                            "attachment; filename=\"" + doc.getFilename() + "\"")
+                    .contentType(MediaType.parseMediaType(contentType))
+                    .contentLength(resource.contentLength())
+                    .body(resource);
+
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
-
-        return ResponseEntity.ok()
-                .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + doc.getFilename() + "\"")
-                .contentType(MediaType.APPLICATION_OCTET_STREAM)
-                .body(resource);
     }
 }

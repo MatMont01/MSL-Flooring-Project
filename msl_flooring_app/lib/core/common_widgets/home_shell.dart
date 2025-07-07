@@ -26,7 +26,7 @@ class HomeShell extends ConsumerWidget {
         print('🔥 [HomeShell] Navigating to Trabajadores');
         break;
       case 3:
-        print('🔥 [HomeShell] Navigating to Comunicaciones');
+        print('🔥 [HomeShell] Navigating to Documentos'); // 🔧 CAMBIADO
         break;
       case 4:
         print('🔥 [HomeShell] Navigating to Analíticas');
@@ -63,6 +63,10 @@ class HomeShell extends ConsumerWidget {
         currentIndex: navigationShell.currentIndex,
         onTap: (int index) => _onTap(context, index),
         type: BottomNavigationBarType.fixed,
+        selectedItemColor: Colors.purple,
+        // 🔧 AÑADIDO COLOR
+        unselectedItemColor: Colors.grey,
+        // 🔧 AÑADIDO COLOR
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.business_center),
@@ -77,8 +81,8 @@ class HomeShell extends ConsumerWidget {
             label: 'Trabajadores',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.chat_bubble_outline),
-            label: 'Comunicaciones',
+            icon: Icon(Icons.folder_open), // 🔧 CAMBIADO ICONO
+            label: 'Documentos', // 🔧 CAMBIADO TEXTO
           ),
           BottomNavigationBarItem(
             icon: Icon(Icons.analytics),

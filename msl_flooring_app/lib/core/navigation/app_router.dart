@@ -3,22 +3,21 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
-// Importamos nuestro nuevo widget
 import 'package:msl_flooring_app/core/common_widgets/session_handler.dart';
-
 import '../../features/analytics/presentation/screens/analytics_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/inventory/presentation/screens/create_material_screen.dart';
 import '../../features/inventory/presentation/screens/inventory_screen.dart';
-import '../../features/notifications/presentation/screens/notification_screen.dart';
 import '../../features/projects/presentation/screens/create_project_screen.dart';
 import '../../features/projects/presentation/screens/project_details_screen.dart';
 import '../../features/projects/presentation/screens/project_list_screen.dart'
     as projects;
 import '../../features/worker/presentation/screens/worker_list_screen.dart';
+import '../../features/documents/presentation/screens/documents_screen.dart';
+import '../../features/documents/presentation/screens/upload_document_screen.dart';
+import '../../features/documents/presentation/screens/document_permissions_screen.dart';
 import 'app_routes.dart';
 
-// --- Router Configuration ---
 class AppRouter {
   static final GlobalKey<NavigatorState> _rootNavigatorKey =
       GlobalKey<NavigatorState>();
@@ -31,19 +30,16 @@ class AppRouter {
         path: AppRoutes.login,
         builder: (context, state) => const LoginScreen(),
       ),
-      // --- Ruta Contenedora Principal (Shell Route) CORREGIDA ---
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
           return SessionHandler(navigationShell: navigationShell);
         },
         branches: [
-          // Pestaña 0: Proyectos
           StatefulShellBranch(
             routes: [
               GoRoute(
                 path: AppRoutes.home,
                 builder: (context, state) => const projects.ProjectListScreen(),
-                // 👈 USA EL ALIAS
                 routes: [
                   GoRoute(
                     path: 'create',
@@ -60,7 +56,6 @@ class AppRouter {
               ),
             ],
           ),
-          // Pestaña 1: Inventario
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -75,7 +70,6 @@ class AppRouter {
               ),
             ],
           ),
-          // El resto de las pestañas se mantienen igual
           StatefulShellBranch(
             routes: [
               GoRoute(
@@ -87,8 +81,33 @@ class AppRouter {
           StatefulShellBranch(
             routes: [
               GoRoute(
-                path: '/notifications',
-                builder: (context, state) => const NotificationScreen(),
+                path: '/documents',
+                builder: (context, state) => const DocumentsScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'upload',
+                    builder: (context, state) => const UploadDocumentScreen(),
+                  ),
+                  GoRoute(
+                    path: 'permissions',
+                    builder: (context, state) =>
+                        const DocumentPermissionsScreen(),
+                  ),
+                  GoRoute(
+                    path: 'permissions/:documentId',
+                    builder: (context, state) {
+                      final documentId = state.pathParameters['documentId']!;
+                      return DocumentPermissionsScreen(documentId: documentId);
+                    },
+                  ),
+                  GoRoute(
+                    path: 'project/:projectId',
+                    builder: (context, state) {
+                      final projectId = state.pathParameters['projectId']!;
+                      return DocumentsScreen(projectId: projectId);
+                    },
+                  ),
+                ],
               ),
             ],
           ),
